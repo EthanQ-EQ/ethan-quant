@@ -32,6 +32,7 @@ if (stocks[code]) {
         <p>📈 建议：${stock.advice}</p>
         <p>💡 理由：${stock.reason}</p>
         <p>🕒 更新时间：${new Date().toLocaleString()}</p>
+        <button>⭐ 加入自选</button>
     `;
 } else {
     result.innerHTML = "❌ 未找到该股票";
