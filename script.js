@@ -36,3 +36,8 @@ if (stocks[code]) {
     result.innerHTML = "❌ 未找到该股票";
 }
 }
+function handleKey(event) {
+    if (event.key === "Enter") {
+        searchStock();
+    }
+}
