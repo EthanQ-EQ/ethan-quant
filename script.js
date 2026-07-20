@@ -2,7 +2,7 @@
 async function searchStock() {
     const code = document.getElementById("stockCode").value;
     const result = document.getElementById("result");
-
+result.innerHTML = "⏳ 正在获取实时行情...";
    const stocks = {
     "002428": {
         name: "东山精密",
