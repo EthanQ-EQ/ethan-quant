@@ -1,0 +1,55 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#0b1220;
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+
+.header{
+    background:#111827;
+    padding:20px;
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+    border-bottom:1px solid #1f2937;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.title{
+    color:#94a3b8;
+    margin-bottom:15px;
+}
+
+.score{
+    font-size:48px;
+    color:#22c55e;
+    font-weight:bold;
+}
+
+.stock{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #334155;
+}
+
+.stock:last-child{
+    border-bottom:none;
+}
