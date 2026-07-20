@@ -1,1 +1,1 @@
-console.log("Ethan Quant 已启动");
+alert("Ethan Quant 已启动！");
