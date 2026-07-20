@@ -1,3 +1,4 @@
+// Ethan Quant V0.6 实时行情开发
 function searchStock() {
     const code = document.getElementById("stockCode").value;
     const result = document.getElementById("result");
