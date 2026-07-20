@@ -31,6 +31,7 @@ if (stocks[code]) {
         <p>🤖 AI评分：${stock.score}分</p>
         <p>📈 建议：${stock.advice}</p>
         <p>💡 理由：${stock.reason}</p>
+        <p>🕒 更新时间：${new Date().toLocaleString()}</p>
     `;
 } else {
     result.innerHTML = "❌ 未找到该股票";
