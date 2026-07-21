@@ -18,61 +18,59 @@ export default async function handler(req, res) {
         "000858"
     ];
 
-    const list = [];
+    const result = [];
 
-    for (const code of pool) {
+    await Promise.all(
 
-        try {
+        pool.map(async (code) => {
 
-            const response = await fetch(
-                `https://qt.gtimg.cn/q=${code.startsWith("6") ? "sh" : "sz"}${code}`
-            );
+            try {
 
-            const text = await response.text();
+                const api =
+                    `${req.headers["x-forwarded-proto"] || "https"}://${req.headers.host}/api/stock?code=${code}`;
 
-            const data = text.split("~");
+                const response = await fetch(api);
 
-            if (data.length < 40) continue;
+                const stock = await response.json();
 
-            const name = data[1];
-            const price = Number(data[3]);
-            const yesterday = Number(data[4]);
+                if (!stock.code) return;
 
-            const changePercent =
-                ((price - yesterday) / yesterday) * 100;
+                let score = 50;
 
-            // 第一版 EQ Score（后面继续升级）
-            let score = 50;
+                const change =
+                    Number(stock.changePercent);
 
-            score += changePercent * 8;
+                score += change * 8;
 
-            if (changePercent > 0)
-                score += 10;
+                if (change > 0)
+                    score += 10;
 
-            if (changePercent > 3)
-                score += 10;
+                if (change > 3)
+                    score += 10;
 
-            score = Math.max(
-                0,
-                Math.min(100, Math.round(score))
-            );
+                score = Math.max(
+                    0,
+                    Math.min(100, Math.round(score))
+                );
 
-            list.push({
-                code,
-                name,
-                score,
-                price,
-                changePercent
-            });
+                result.push({
+                    code: stock.code,
+                    name: stock.name,
+                    score,
+                    price: stock.price,
+                    change: stock.changePercent
+                });
 
-        } catch (e) {}
+            } catch (e) {}
 
-    }
+        })
 
-    list.sort((a, b) => b.score - a.score);
+    );
+
+    result.sort((a, b) => b.score - a.score);
 
     res.status(200).json(
-        list.slice(0, 3)
+        result.slice(0, 3)
     );
 
 }
