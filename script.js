@@ -36,7 +36,8 @@ async function searchStock() {
                 <p>📈 建议：${stock.advice}</p>
                 <p>💡 理由：${stock.reason}</p>
                 <p>🕒 更新时间：${new Date().toLocaleString()}</p>
-                <button>⭐ 加入自选</button>
+                <button onclick="addFavorite('${code}')">⭐ 加入自选</button>
+                
             `;
         } else {
             result.innerHTML = "❌ 未找到该股票";
@@ -51,5 +52,16 @@ async function searchStock() {
 function handleKey(event) {
     if (event.key === "Enter") {
         searchStock();
+    }
+}
+function addFavorite(code) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (!favorites.includes(code)) {
+        favorites.push(code);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        alert("⭐ 已加入自选");
+    } else {
+        alert("这只股票已经在自选中了");
     }
 }
