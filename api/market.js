@@ -2,35 +2,19 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
-    // 上证、深证、创业板
     const urls = [
       "https://push2.eastmoney.com/api/qt/stock/get?secid=1.000001&fields=f43,f170,f58",
       "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399001&fields=f43,f170,f58",
-      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58",
-
-      // 全A股列表（用于统计上涨家数）
-      "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f3"
+      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58"
     ];
 
-    const [shRes, szRes, cybRes, advanceRes] =
+    const [shRes, szRes, cybRes] =
       await Promise.all(urls.map(url => fetch(url)));
 
     const sh = (await shRes.json()).data;
     const sz = (await szRes.json()).data;
     const cyb = (await cybRes.json()).data;
-    const advanceJson = await advanceRes.json();
 
-  let advanceCount = 0;
-
-if (advanceJson.data?.diff) {
-  const stocks = Object.values(advanceJson.data.diff);
-
-  advanceCount = stocks.filter(
-    item => Number(item.f3) > 0
-  ).length;
-}
-
-    // 根据涨跌幅评分（0~20）
     function scoreIndex(percent) {
       if (percent >= 2) return 20;
       if (percent >= 1.5) return 18;
@@ -52,32 +36,16 @@ if (advanceJson.data?.diff) {
       ) / 2
     );
 
-    let advanceScore = 0;
-
-    if (advanceCount >= 4000) advanceScore = 20;
-    else if (advanceCount >= 3500) advanceScore = 18;
-    else if (advanceCount >= 3000) advanceScore = 16;
-    else if (advanceCount >= 2500) advanceScore = 14;
-    else if (advanceCount >= 2000) advanceScore = 12;
-    else if (advanceCount >= 1500) advanceScore = 10;
-    else if (advanceCount >= 1000) advanceScore = 8;
-    else advanceScore = 5;
-
-    const fundScore = 8;
-    const emotionScore = 8;
-
-    const temperature =
-      shScore +
-      szScore +
-      advanceScore +
-      fundScore +
-      emotionScore;
+    // 只根据真实指数计算市场温度
+    const temperature = Math.round(
+      ((shScore + szScore) / 40) * 100
+    );
 
     let level = "冰点";
 
-    if (temperature >= 85) level = "极强";
-    else if (temperature >= 70) level = "偏强";
-    else if (temperature >= 55) level = "震荡";
+    if (temperature >= 90) level = "极强";
+    else if (temperature >= 75) level = "偏强";
+    else if (temperature >= 60) level = "震荡";
     else if (temperature >= 40) level = "偏弱";
 
     res.status(200).json({
@@ -88,10 +56,7 @@ if (advanceJson.data?.diff) {
 
       score: {
         shanghai: shScore,
-        sz: szScore,
-        advance: advanceScore,
-        fund: fundScore,
-        emotion: emotionScore
+        sz: szScore
       },
 
       market: {
@@ -109,9 +74,7 @@ if (advanceJson.data?.diff) {
           name: cyb.f58,
           changePercent: cyb.f170 / 100
         }
-      },
-
-    advanceCount
+      }
     });
 
   } catch (err) {
