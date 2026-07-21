@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-
   const { code } = req.query;
 
   if (!code) {
@@ -11,31 +10,29 @@ export default async function handler(req, res) {
 
   try {
 
-    // 获取股票实时数据
- const protocol =
-  req.headers["x-forwarded-proto"] || "https";
+    // 获取当前网站地址
+    const protocol = req.headers["x-forwarded-proto"] || "https";
+    const host = req.headers.host;
 
-const host = req.headers.host;
+    // 获取实时股票数据
+    const stockRes = await fetch(
+      `${protocol}://${host}/api/stock?code=${code}`
+    );
 
-const stockRes = await fetch(
-  `${protocol}://${host}/api/stock?code=${code}`
-);
+    if (!stockRes.ok) {
+      throw new Error("获取股票数据失败");
+    }
 
-if (!stockRes.ok) {
-  throw new Error(`获取股票数据失败：${stockRes.status}`);
-}
-
-const stock = await stockRes.json();
     const stock = await stockRes.json();
 
+    // 组织 Prompt
     const prompt = `
-你是一名专业A股分析师。
+你是一位专业A股分析师。
 
-请分析下面这只股票：
+请根据下面数据分析：
 
 股票名称：${stock.name}
 股票代码：${stock.code}
-
 最新价：${stock.price}
 涨跌额：${stock.change}
 涨跌幅：${stock.changePercent}%
@@ -43,7 +40,7 @@ const stock = await stockRes.json();
 最高：${stock.high}
 最低：${stock.low}
 
-请严格按照下面格式回答：
+请严格按照下面格式回答，不要输出 Markdown。
 
 🤖 AI深度分析
 
@@ -66,13 +63,12 @@ AI综合评分：
 
 ━━━━━━━━━━━━
 
-最后补一句：
-
 （本分析仅供参考，不构成投资建议）
 `;
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
+    // 调用 Gemini
+    const aiRes = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
       {
         method: "POST",
         headers: {
@@ -93,30 +89,35 @@ AI综合评分：
       }
     );
 
-  const text = await response.text();
-console.log(text);
+    const aiJson = await aiRes.json();
 
-const json = JSON.parse(text);
+    if (!aiRes.ok) {
+      return res.status(aiRes.status).json({
+        success: false,
+        message: "Gemini接口调用失败",
+        error: aiJson
+      });
+    }
 
-    const text =
-      json.candidates?.[0]?.content?.parts?.[0]?.text;
+    const analysis =
+      aiJson.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!text) {
-
+    if (!analysis) {
       return res.status(500).json({
         success: false,
-        message: "Gemini返回为空",
-        raw: json
+        message: "Gemini没有返回分析结果",
+        raw: aiJson
       });
-
     }
 
     return res.status(200).json({
       success: true,
-      analysis: text
+      analysis
     });
 
   } catch (err) {
+
+    console.error(err);
 
     return res.status(500).json({
       success: false,
@@ -124,5 +125,4 @@ const json = JSON.parse(text);
     });
 
   }
-
 }
