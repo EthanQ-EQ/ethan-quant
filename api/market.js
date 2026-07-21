@@ -18,6 +18,13 @@ export default async function handler(req, res) {
     const sz = (await szRes.json()).data;
     const cyb = (await cybRes.json()).data;
 const advanceJson = await advanceRes.json();
+let advanceCount = 0;
+
+if (advanceJson.data?.diff?.length) {
+  advanceCount = advanceJson.data.diff.filter(
+    item => (item.f3 || 0) > 0
+  ).length;
+}
     // 根据涨跌幅评分（0~20）
     function scoreIndex(percent) {
       if (percent >= 2) return 20;
@@ -41,7 +48,16 @@ const advanceJson = await advanceRes.json();
     );
 
     // 下一版接入真实数据
-    const advanceScore = 10;
+    let advanceScore = 0;
+
+if (advanceCount >= 4000) advanceScore = 20;
+else if (advanceCount >= 3500) advanceScore = 18;
+else if (advanceCount >= 3000) advanceScore = 16;
+else if (advanceCount >= 2500) advanceScore = 14;
+else if (advanceCount >= 2000) advanceScore = 12;
+else if (advanceCount >= 1500) advanceScore = 10;
+else if (advanceCount >= 1000) advanceScore = 8;
+else advanceScore = 5;
     const fundScore = 8;
     const emotionScore = 8;
 
@@ -73,23 +89,24 @@ const advanceJson = await advanceRes.json();
         emotion: emotionScore
       },
 
-      market: {
-        shanghai: {
-          name: sh.f58,
-          changePercent: sh.f170 / 100
-        },
+     market: {
+    shanghai: {
+        name: sh.f58,
+        changePercent: sh.f170 / 100
+    },
 
-        shenzhen: {
-          name: sz.f58,
-          changePercent: sz.f170 / 100
-        },
+    shenzhen: {
+        name: sz.f58,
+        changePercent: sz.f170 / 100
+    },
 
-        chinext: {
-          name: cyb.f58,
-          changePercent: cyb.f170 / 100
-        }
-      }
+    chinext: {
+        name: cyb.f58,
+        changePercent: cyb.f170 / 100
+    }
+},
 
+advanceCount
     });
 
   } catch (err) {
