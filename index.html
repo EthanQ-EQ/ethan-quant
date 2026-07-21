@@ -1,126 +1,130 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>乙烷量子 - AI量化股票系统</title>
+
     <link rel="stylesheet" href="style.css">
-    <style>
-        body{
-            margin:0;
-            background:#0f172a;
-            color:white;
-            font-family:Arial,sans-serif;
-            text-align:center;
-        }
-        .box{
-            max-width:800px;
-            margin:80px auto;
-        }
-        h1{
-            font-size:48px;
-            margin-bottom:10px;
-        }
-        p{
-            color:#94a3b8;
-            font-size:20px;
-        }
-        .card{
-            margin-top:40px;
-            background:#1e293b;
-            padding:30px;
-            border-radius:16px;
-        }
-        .score{
-            font-size:60px;
-            color:#22c55e;
-            margin:20px 0;
-        }
-    </style>
 </head>
+
 <body>
+
+    <!-- 顶部品牌 -->
     <div class="header">
-    📈 Ethan Quant
-</div>
 
-<div class="container">
-
-    <div class="card">
-        <div class="title">市场温度</div>
-        <div class="score">72°</div>
-        <p>🟢 今日市场：偏强</p>
-    </div>
-
-    <div class="card">
-        <div class="title">今日 Top 3（演示）</div>
-
-        <div class="stock">
-            <span>① 云南锗业</span>
-            <strong>95分</strong>
+        <div class="logo">
+            📈 Ethan Quant
         </div>
 
-        <div class="stock">
-            <span>② 北方稀土</span>
-            <strong>92分</strong>
+        <div class="subtitle">
+            乙烷量子 · AI Quantitative Stock System
         </div>
 
-        <div class="stock">
-            <span>③ 中际旭创</span>
-            <strong>90分</strong>
+        <div class="version">
+            Version 0.7
         </div>
 
     </div>
+
+    <div class="container">
+
+        <!-- 市场温度 -->
+        <div class="card">
+
+            <div class="title">
+                市场温度
+            </div>
+
+            <div class="score">
+                72°
+            </div>
+
+            <p>
+                🟢 今日市场：偏强
+            </p>
+
+        </div>
+
+        <!-- 今日 Top3 -->
+        <div class="card">
+
+            <div class="title">
+                今日 Top 3（演示）
+            </div>
+
             <div class="stock">
-            <span>③ 中际旭创</span>
-            <strong>90分</strong>
+                <span>① 云南锗业</span>
+                <strong>95分</strong>
+            </div>
+
+            <div class="stock">
+                <span>② 北方稀土</span>
+                <strong>92分</strong>
+            </div>
+
+            <div class="stock">
+                <span>③ 中际旭创</span>
+                <strong>90分</strong>
+            </div>
+
         </div>
 
-    </div>   ← 第二张卡片结束（这里）
+        <!-- AI观点 -->
+        <div class="card">
 
-    <!-- 在这里粘贴 ↓↓↓ -->
+            <div class="title">
+                🤖 AI 今日观点
+            </div>
 
-    <div class="card">
+            <p>
+                半导体板块今日强于大盘，建议关注成交量持续放大的个股，不建议追高连续大涨股票。
+            </p>
 
-        <div class="title">
-            🤖 AI 今日观点
         </div>
 
-        <p>
-            半导体板块今日强于大盘，
-            建议关注成交量持续放大的个股，
-            不建议追高连续大涨股票。
-        </p>
-        
+        <!-- 股票搜索 -->
+        <div class="card">
+
+            <div class="title">
+                🔍 股票搜索
+            </div>
+
+            <input
+                id="stockCode"
+                type="text"
+                placeholder="输入股票代码，例如：002428"
+                onkeydown="handleKey(event)"
+            >
+
+            <button onclick="searchStock()">
+                查询
+            </button>
+
+            <div id="result"></div>
+
+        </div>
+
+        <!-- 我的自选 -->
+        <div class="card">
+
+            <div class="title">
+                ⭐ 我的自选
+            </div>
+
+            <div id="favorites">
+                暂无自选股票
+            </div>
+
+        </div>
+
     </div>
-</div>   ← AI 今日观点卡片结束（第94行左右）
 
-<!-- 在这里粘贴 ↓↓↓ -->
+    <script src="stocks.js"></script>
+    <script src="script.js"></script>
 
-<div class="card">
-
-    <div class="title">
-        🔍 股票搜索
-    </div>
-
- <input id="stockCode" type="text" placeholder="输入股票代码，例如：002428" onkeydown="handleKey(event)">
-
-<button onclick="searchStock()">查询</button>
-
-<p id="result"></p>
-
-</div>
-<div class="card">
-    <div class="title">
-        ⭐ 我的自选
-    </div>
-
-    <div id="favorites">
-        暂无自选股票
-    </div>
-</div>
-</div>   ← container结束（不要删）
-</div>   ← container结束
-<script src="stocks.js"></script>
-<script src="script.js"></script>
 </body>
+
 </html>
