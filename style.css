@@ -30,11 +30,14 @@ body{
     border-radius:16px;
     padding:20px;
     margin-bottom:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
 .title{
     color:#94a3b8;
     margin-bottom:15px;
+    font-size:18px;
+    font-weight:bold;
 }
 
 .score{
@@ -54,36 +57,103 @@ body{
     border-bottom:none;
 }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 16px;
-    box-sizing: border-box;
+input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#0f172a;
+    color:white;
+    font-size:16px;
+    outline:none;
 }
 
-button {
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #1677ff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+input::placeholder{
+    color:#64748b;
 }
 
-button:hover {
-    background: #0f5fd7;
+button{
+    width:100%;
+    margin-top:12px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#1677ff;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.25s;
 }
-#result {
-    margin-top: 20px;
-    padding: 16px;
-    background: #f5f7fa;
-    border-radius: 12px;
-    line-height: 1.8;
-    border-left: 4px solid #1677ff;
+
+button:hover{
+    background:#0f5fd7;
+}
+
+#result{
+    margin-top:20px;
+    padding:18px;
+    background:#0f172a;
+    border-radius:12px;
+    line-height:1.8;
+    text-align:left;
+}
+
+/* ========= V0.7 自选卡片 ========= */
+
+.favorite-card{
+    background:#0f172a;
+    border:1px solid #334155;
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:14px;
+    transition:.25s;
+}
+
+.favorite-card:hover{
+    transform:translateY(-2px);
+    border-color:#3b82f6;
+}
+
+.favorite-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:12px;
+}
+
+.favorite-name{
+    font-size:18px;
+    font-weight:700;
+    color:#ffffff;
+}
+
+.favorite-code{
+    font-size:13px;
+    color:#94a3b8;
+    margin-top:4px;
+}
+
+.favorite-price{
+    font-size:30px;
+    font-weight:bold;
+    margin:8px 0;
+}
+
+.favorite-change{
+    font-size:16px;
+    font-weight:600;
+}
+
+.delete-btn{
+    width:auto;
+    margin:0;
+    padding:8px 14px;
+    background:#ef4444;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
 }
