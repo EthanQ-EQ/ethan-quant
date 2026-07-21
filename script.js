@@ -318,12 +318,41 @@ loadTop3();
 // Gemini 深度分析（V1.0）
 // ==============================
 
+// ==============================
+// Gemini 深度分析（V1.0）
+// ==============================
+
 async function deepAnalyze(code) {
 
-    alert(
-        "🤖 AI深度分析\n\n股票代码：" +
-        code +
-        "\n\n下一步接入 Google Gemini。"
-    );
+    try {
+
+        const btn = event.target;
+        const oldText = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = "🤖 AI分析中...";
+
+        const res = await fetch(`/api/gemini?code=${code}`);
+        const data = await res.json();
+
+        btn.disabled = false;
+        btn.innerHTML = oldText;
+
+        if (!data.success) {
+
+            alert("AI分析失败：\n\n" + data.message);
+            return;
+
+        }
+
+        alert(data.analysis);
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("AI分析失败，请稍后重试。");
+
+    }
 
 }
