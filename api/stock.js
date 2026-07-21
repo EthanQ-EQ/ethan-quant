@@ -29,7 +29,24 @@ export default async function handler(req, res) {
     const response = await fetch(url);
     const json = await response.json();
 
-    res.status(200).json(json);
+  const d = json.data;
+
+res.status(200).json({
+  code: d.f57,
+  name: d.f58,
+
+  price: d.f43 / 100,
+  open: d.f46 / 100,
+  high: d.f44 / 100,
+  low: d.f45 / 100,
+  yesterday: d.f60 / 100,
+
+  change: d.f169 / 100,
+  changePercent: d.f170 / 100,
+
+  volume: d.f47,
+  amount: d.f48
+});
   } catch (err) {
     res.status(500).json({
       success: false,
