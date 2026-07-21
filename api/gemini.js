@@ -12,15 +12,20 @@ export default async function handler(req, res) {
   try {
 
     // 获取股票实时数据
-    const host =
-      process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000";
+ const protocol =
+  req.headers["x-forwarded-proto"] || "https";
 
-    const stockRes = await fetch(
-      `${host}/api/stock?code=${code}`
-    );
+const host = req.headers.host;
 
+const stockRes = await fetch(
+  `${protocol}://${host}/api/stock?code=${code}`
+);
+
+if (!stockRes.ok) {
+  throw new Error(`获取股票数据失败：${stockRes.status}`);
+}
+
+const stock = await stockRes.json();
     const stock = await stockRes.json();
 
     const prompt = `
@@ -88,7 +93,10 @@ AI综合评分：
       }
     );
 
-    const json = await response.json();
+  const text = await response.text();
+console.log(text);
+
+const json = JSON.parse(text);
 
     const text =
       json.candidates?.[0]?.content?.parts?.[0]?.text;
