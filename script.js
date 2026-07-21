@@ -74,9 +74,25 @@ function showFavorites() {
         "000858": "五粮液"
     };
 
-    favoritesDiv.innerHTML = favorites
-        .map(code => `<p>⭐ ${names[code] || "未知股票"}（${code}）</p>`)
-        .join("");
-}
+   favoritesDiv.innerHTML = favorites
+    .map(code => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #333;">
+            <span>⭐ ${names[code] || "未知股票"}（${code}）</span>
 
+            <button onclick="removeFavorite('${code}')">
+                ❌ 删除
+            </button>
+        </div>
+    `)
+    .join("");
+}
+function removeFavorite(code) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites = favorites.filter(item => item !== code);
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    showFavorites();
+}
 showFavorites();
