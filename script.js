@@ -60,8 +60,23 @@ function addFavorite(code) {
     if (!favorites.includes(code)) {
         favorites.push(code);
         localStorage.setItem("favorites", JSON.stringify(favorites));
+        showFavorites();
         alert("⭐ 已加入自选");
     } else {
         alert("这只股票已经在自选中了");
     }
 }
+function showFavorites() {
+    const favoritesDiv = document.getElementById("favorites");
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favorites.length === 0) {
+        favoritesDiv.innerHTML = "暂无自选股票";
+        return;
+    }
+
+    favoritesDiv.innerHTML = favorites
+        .map(code => `<p>⭐ ${code}</p>`)
+        .join("");
+}
+showFavorites();
