@@ -241,9 +241,6 @@ async function loadMarket() {
         document.getElementById("score-advance").innerHTML =
             data.score.advance + " / 20";
 
-        document.getElementById("score-amount").innerHTML =
-            data.score.amount + " / 15";
-
         document.getElementById("score-fund").innerHTML =
             data.score.fund + " / 15";
 
