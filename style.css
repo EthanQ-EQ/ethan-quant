@@ -157,3 +157,37 @@ button:hover{
 .delete-btn:hover{
     background:#dc2626;
 }
+/* ========= V0.8 市场温度 ========= */
+
+.market-score{
+    margin-top:18px;
+}
+
+.score-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #334155;
+    font-size:16px;
+}
+
+.score-item:last-child{
+    border-bottom:none;
+}
+
+.score-item span{
+    color:#cbd5e1;
+}
+
+.score-item strong{
+    color:#22c55e;
+    font-size:16px;
+    font-weight:700;
+}
+
+hr{
+    border:none;
+    border-top:1px solid #334155;
+    margin:18px 0;
+}
