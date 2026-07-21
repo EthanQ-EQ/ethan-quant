@@ -1,98 +1,217 @@
-// Ethan Quant V0.6 实时行情开发
+// =========================================
+// Ethan Quant V0.7
+// 实时搜索 + 实时自选
+// =========================================
 
+// 搜索股票
 async function searchStock() {
     const code = document.getElementById("stockCode").value.trim();
     const result = document.getElementById("result");
 
-    try {
-        result.innerHTML = "⏳ 正在获取实时行情...";
+    if (!code) {
+        result.innerHTML = "请输入股票代码";
+        return;
+    }
 
+    result.innerHTML = "⏳ 正在获取实时行情...";
+
+    try {
         const response = await fetch(`/api/stock?code=${code}`);
         const stock = await response.json();
 
-        if (stock.code) {
-
-            result.innerHTML = `
-                <h3>${stock.name} (${stock.code})</h3>
-
-                <p>💰 最新价：¥${stock.price}</p>
-                <p>📈 涨跌额：${stock.change}</p>
-                <p>📊 涨跌幅：${stock.changePercent}%</p>
-
-                <p>🌅 今开：${stock.open}</p>
-                <p>📈 最高：${stock.high}</p>
-                <p>📉 最低：${stock.low}</p>
-
-                <p>⏰ 更新时间：${new Date().toLocaleString()}</p>
-
-                <button onclick="addFavorite('${stock.code}')">
-                    ⭐ 加入自选
-                </button>
-            `;
-
-        } else {
+        if (!stock.code) {
             result.innerHTML = "❌ 未找到该股票";
+            return;
         }
 
-    } catch (error) {
+        const color =
+            Number(stock.change) >= 0 ? "#ef4444" : "#22c55e";
+
+        result.innerHTML = `
+            <h3>${stock.name} (${stock.code})</h3>
+
+            <p>💰 最新价：
+                <span style="color:${color};font-weight:bold;">
+                    ¥${stock.price}
+                </span>
+            </p>
+
+            <p style="color:${color};">
+                📈 涨跌额：${stock.change}
+            </p>
+
+            <p style="color:${color};">
+                📊 涨跌幅：${stock.changePercent}%
+            </p>
+
+            <p>🌅 今开：${stock.open}</p>
+            <p>📈 最高：${stock.high}</p>
+            <p>📉 最低：${stock.low}</p>
+
+            <p style="margin-top:10px;color:#888;">
+                更新时间：${new Date().toLocaleString()}
+            </p>
+
+            <button onclick="addFavorite('${stock.code}')">
+                ⭐ 加入自选
+            </button>
+        `;
+
+    } catch (err) {
+        console.error(err);
         result.innerHTML = "❌ 获取实时行情失败";
-        console.error(error);
     }
 }
 
+// Enter 查询
 function handleKey(event) {
     if (event.key === "Enter") {
         searchStock();
     }
 }
 
+// 添加自选
 function addFavorite(code) {
-    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-    if (!favorites.includes(code)) {
-        favorites.push(code);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-        showFavorites();
-        alert("⭐ 已加入自选");
-    } else {
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favorites.includes(code)) {
         alert("这只股票已经在自选中了");
+        return;
     }
+
+    favorites.push(code);
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+
+    loadFavorites();
+
+    alert("⭐ 已加入自选");
 }
 
-function showFavorites() {
-    const favoritesDiv = document.getElementById("favorites");
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+// 删除自选
+function removeFavorite(code) {
+
+    let favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites = favorites.filter(item => item !== code);
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+
+    loadFavorites();
+}
+
+// 加载自选（实时）
+async function loadFavorites() {
+
+    const favoritesDiv =
+        document.getElementById("favorites");
+
+    const favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
 
     if (favorites.length === 0) {
         favoritesDiv.innerHTML = "暂无自选股票";
         return;
     }
 
-    const names = {
-        "600519": "贵州茅台",
-        "002428": "东山精密",
-        "000858": "五粮液"
-    };
+    favoritesDiv.innerHTML = "⏳ 正在加载实时行情...";
 
-   favoritesDiv.innerHTML = favorites
-    .map(code => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #333;">
-            <span>⭐ ${names[code] || "未知股票"}（${code}）</span>
+    let html = "";
 
-            <button onclick="removeFavorite('${code}')">
-                ❌ 删除
-            </button>
-        </div>
-    `)
-    .join("");
+    for (const code of favorites) {
+
+        try {
+
+            const response =
+                await fetch(`/api/stock?code=${code}`);
+
+            const stock =
+                await response.json();
+
+            const color =
+                Number(stock.change) >= 0
+                    ? "#ef4444"
+                    : "#22c55e";
+
+            html += `
+                <div class="favorite-card">
+
+                    <div class="favorite-top">
+
+                        <div>
+
+                            <div class="favorite-name">
+                                ⭐ ${stock.name}
+                            </div>
+
+                            <div class="favorite-code">
+                                ${stock.code}
+                            </div>
+
+                        </div>
+
+                        <button
+                            onclick="removeFavorite('${stock.code}')"
+                            class="delete-btn">
+                            删除
+                        </button>
+
+                    </div>
+
+                    <div
+                        class="favorite-price"
+                        style="color:${color};">
+
+                        ¥${stock.price}
+
+                    </div>
+
+                    <div
+                        class="favorite-change"
+                        style="color:${color};">
+
+                        ${stock.change}
+                        (${stock.changePercent}%)
+
+                    </div>
+
+                </div>
+            `;
+
+        } catch (err) {
+
+            html += `
+                <div class="favorite-card">
+
+                    <div class="favorite-name">
+
+                        ${code}
+
+                    </div>
+
+                    <div style="color:#999;">
+                        获取失败
+                    </div>
+
+                </div>
+            `;
+
+        }
+
+    }
+
+    favoritesDiv.innerHTML = html;
+
 }
-function removeFavorite(code) {
-    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-    favorites = favorites.filter(item => item !== code);
-
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-
-    showFavorites();
-}
-showFavorites();
+// 页面打开立即加载
+loadFavorites();
