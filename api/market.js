@@ -3,28 +3,31 @@ export default async function handler(req, res) {
 
   try {
     // 上证、深证、创业板
-  const urls = [
-  "https://push2.eastmoney.com/api/qt/stock/get?secid=1.000001&fields=f43,f170,f58",
-  "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399001&fields=f43,f170,f58",
-  "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58",
+    const urls = [
+      "https://push2.eastmoney.com/api/qt/stock/get?secid=1.000001&fields=f43,f170,f58",
+      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399001&fields=f43,f170,f58",
+      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58",
 
-  // 全A股列表（用于统计上涨家数）
-  "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f3"
-];
-   const [shRes, szRes, cybRes, advanceRes] =
-    await Promise.all(urls.map(url => fetch(url)));
+      // 全A股列表（用于统计上涨家数）
+      "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f3"
+    ];
+
+    const [shRes, szRes, cybRes, advanceRes] =
+      await Promise.all(urls.map(url => fetch(url)));
 
     const sh = (await shRes.json()).data;
     const sz = (await szRes.json()).data;
     const cyb = (await cybRes.json()).data;
-const advanceJson = await advanceRes.json();
-let advanceCount = 0;
+    const advanceJson = await advanceRes.json();
 
-if (advanceJson.data?.diff?.length) {
-  advanceCount = advanceJson.data.diff.filter(
-    item => (item.f3 || 0) > 0
-  ).length;
-}
+    let advanceCount = 0;
+
+    if (advanceJson.data?.diff?.length) {
+      advanceCount = advanceJson.data.diff.filter(
+        item => (item.f3 || 0) > 0
+      ).length;
+    }
+
     // 根据涨跌幅评分（0~20）
     function scoreIndex(percent) {
       if (percent >= 2) return 20;
@@ -47,17 +50,17 @@ if (advanceJson.data?.diff?.length) {
       ) / 2
     );
 
-    // 下一版接入真实数据
     let advanceScore = 0;
 
-if (advanceCount >= 4000) advanceScore = 20;
-else if (advanceCount >= 3500) advanceScore = 18;
-else if (advanceCount >= 3000) advanceScore = 16;
-else if (advanceCount >= 2500) advanceScore = 14;
-else if (advanceCount >= 2000) advanceScore = 12;
-else if (advanceCount >= 1500) advanceScore = 10;
-else if (advanceCount >= 1000) advanceScore = 8;
-else advanceScore = 5;
+    if (advanceCount >= 4000) advanceScore = 20;
+    else if (advanceCount >= 3500) advanceScore = 18;
+    else if (advanceCount >= 3000) advanceScore = 16;
+    else if (advanceCount >= 2500) advanceScore = 14;
+    else if (advanceCount >= 2000) advanceScore = 12;
+    else if (advanceCount >= 1500) advanceScore = 10;
+    else if (advanceCount >= 1000) advanceScore = 8;
+    else advanceScore = 5;
+
     const fundScore = 8;
     const emotionScore = 8;
 
@@ -89,24 +92,27 @@ else advanceScore = 5;
         emotion: emotionScore
       },
 
-     market: {
-    shanghai: {
-        name: sh.f58,
-        changePercent: sh.f170 / 100
-    },
+      market: {
+        shanghai: {
+          name: sh.f58,
+          changePercent: sh.f170 / 100
+        },
 
-    shenzhen: {
-        name: sz.f58,
-        changePercent: sz.f170 / 100
-    },
+        shenzhen: {
+          name: sz.f58,
+          changePercent: sz.f170 / 100
+        },
 
-    chinext: {
-        name: cyb.f58,
-        changePercent: cyb.f170 / 100
-    }
-},
+        chinext: {
+          name: cyb.f58,
+          changePercent: cyb.f170 / 100
+        }
+      },
 
-advanceCount
+      advanceCount,
+
+      // 临时调试，下一步会删除
+      advanceJson
     });
 
   } catch (err) {
