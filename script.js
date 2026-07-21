@@ -76,7 +76,15 @@ function showFavorites() {
     }
 
     favoritesDiv.innerHTML = favorites
-        .map(code => `<p>⭐ ${code}</p>`)
+.map(code => {
+    const names = {
+        "600519": "贵州茅台",
+        "002428": "东山精密",
+        "000858": "五粮液"
+    };
+
+    return `<p>⭐ ${names[code] || "未知股票"}（${code}）</p>`;
+})
         .join("");
 }
 showFavorites();
