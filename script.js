@@ -6,38 +6,27 @@ async function searchStock() {
     try {
         result.innerHTML = "⏳ 正在获取实时行情...";
 
-        const stocks = {
-            "002428": {
-                name: "东山精密",
-                score: 88,
-                advice: "继续观察",
-                reason: "PCB、消费电子和新能源业务布局较完善，需关注成交量和业绩表现。"
-            },
-            "600519": {
-                name: "贵州茅台",
-                score: 95,
-                advice: "长期关注",
-                reason: "白酒龙头，盈利能力强，长期价值突出。"
-            },
-            "000858": {
-                name: "五粮液",
-                score: 91,
-                advice: "继续持有",
-                reason: "业绩稳定，高端白酒需求较强。"
-            }
-        };
+      const response = await fetch(`/api/stock?code=${code}`);
+const stock = await response.json();
+ if (stock.code) {
 
-        if (stocks[code]) {
-            const stock = stocks[code];
+  result.innerHTML = `
+    <h3>${stock.name} (${stock.code})</h3>
 
-            result.innerHTML = `
-                <h3>${stock.name}（${code}）</h3>
-                <p>🤖 AI评分：${stock.score}分</p>
-                <p>📈 建议：${stock.advice}</p>
-                <p>💡 理由：${stock.reason}</p>
-                <p>🕒 更新时间：${new Date().toLocaleString()}</p>
-                <button onclick="addFavorite('${code}')">⭐ 加入自选</button>
-                
+    <p>💰 最新价：¥${stock.price}</p>
+    <p>📈 涨跌额：${stock.change}</p>
+    <p>📊 涨跌幅：${stock.changePercent}%</p>
+
+    <p>🌅 今开：${stock.open}</p>
+    <p>📈 最高：${stock.high}</p>
+    <p>📉 最低：${stock.low}</p>
+
+    <p>⏰ 更新时间：${new Date().toLocaleString()}</p>
+
+    <button onclick="addFavorite('${stock.code}')">
+        ⭐ 加入自选
+    </button>
+`;
             `;
         } else {
             result.innerHTML = "❌ 未找到该股票";
