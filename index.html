@@ -31,23 +31,58 @@
 
     <div class="container">
 
-        <!-- 市场温度 -->
-        <div class="card">
+     <!-- 市场温度 -->
+<div class="card">
 
-            <div class="title">
-                市场温度
-            </div>
+    <div class="title">
+        📈 市场温度
+    </div>
 
-            <div class="score">
-                72°
-            </div>
+    <div class="score" id="marketTemp">
+        --
+    </div>
 
-            <p>
-                🟢 今日市场：偏强
-            </p>
+    <p id="marketLevel">
+        正在获取市场数据...
+    </p>
 
+    <hr>
+
+    <div class="market-score">
+
+        <div class="score-item">
+            <span>📈 上证指数</span>
+            <strong id="score-shanghai">-- / 20</strong>
         </div>
 
+        <div class="score-item">
+            <span>📊 深创指数</span>
+            <strong id="score-sz">-- / 20</strong>
+        </div>
+
+        <div class="score-item">
+            <span>📉 上涨家数</span>
+            <strong id="score-advance">-- / 20</strong>
+        </div>
+
+        <div class="score-item">
+            <span>💰 两市成交额</span>
+            <strong id="score-amount">-- / 15</strong>
+        </div>
+
+        <div class="score-item">
+            <span>🏦 主力资金</span>
+            <strong id="score-fund">-- / 15</strong>
+        </div>
+
+        <div class="score-item">
+            <span>🔥 市场情绪</span>
+            <strong id="score-emotion">-- / 10</strong>
+        </div>
+
+    </div>
+
+</div>
         <!-- 今日 Top3 -->
         <div class="card">
 
