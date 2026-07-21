@@ -215,3 +215,50 @@ async function loadFavorites() {
 
 // 页面打开立即加载
 loadFavorites();
+// ==============================
+// V0.8 市场温度
+// ==============================
+
+async function loadMarket() {
+
+    try {
+
+        const res = await fetch("/api/market");
+        const data = await res.json();
+
+        document.getElementById("marketTemp").innerHTML =
+            data.temperature + "°";
+
+        document.getElementById("marketLevel").innerHTML =
+            "🟢 今日市场：" + data.level;
+
+        document.getElementById("score-shanghai").innerHTML =
+            data.score.shanghai + " / 20";
+
+        document.getElementById("score-sz").innerHTML =
+            data.score.sz + " / 20";
+
+        document.getElementById("score-advance").innerHTML =
+            data.score.advance + " / 20";
+
+        document.getElementById("score-amount").innerHTML =
+            data.score.amount + " / 15";
+
+        document.getElementById("score-fund").innerHTML =
+            data.score.fund + " / 15";
+
+        document.getElementById("score-emotion").innerHTML =
+            data.score.emotion + " / 10";
+
+    } catch (err) {
+
+        console.error(err);
+
+        document.getElementById("marketLevel").innerHTML =
+            "获取市场数据失败";
+
+    }
+
+}
+
+loadMarket();
