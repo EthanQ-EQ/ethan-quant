@@ -3,19 +3,21 @@ export default async function handler(req, res) {
 
   try {
     // 上证、深证、创业板
-    const urls = [
-      "https://push2.eastmoney.com/api/qt/stock/get?secid=1.000001&fields=f43,f170,f58",
-      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399001&fields=f43,f170,f58",
-      "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58"
-    ];
+  const urls = [
+  "https://push2.eastmoney.com/api/qt/stock/get?secid=1.000001&fields=f43,f170,f58",
+  "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399001&fields=f43,f170,f58",
+  "https://push2.eastmoney.com/api/qt/stock/get?secid=0.399006&fields=f43,f170,f58",
 
-    const [shRes, szRes, cybRes] =
-      await Promise.all(urls.map(url => fetch(url)));
+  // 全A股列表（用于统计上涨家数）
+  "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f3"
+];
+   const [shRes, szRes, cybRes, advanceRes] =
+    await Promise.all(urls.map(url => fetch(url)));
 
     const sh = (await shRes.json()).data;
     const sz = (await szRes.json()).data;
     const cyb = (await cybRes.json()).data;
-
+const advanceJson = await advanceRes.json();
     // 根据涨跌幅评分（0~20）
     function scoreIndex(percent) {
       if (percent >= 2) return 20;
