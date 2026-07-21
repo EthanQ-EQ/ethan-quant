@@ -263,3 +263,46 @@ if (data.temperature >= 60) {
 }
 
 loadMarket();
+// ==============================
+// V0.9 今日AI推荐
+// ==============================
+
+async function loadTop3() {
+
+    try {
+
+        const res = await fetch("/api/top3");
+
+        const list = await res.json();
+
+        let html = "";
+
+        list.forEach((stock, index) => {
+
+            html += `
+                <div class="stock">
+                    <span>
+                        ${index + 1}️⃣ ${stock.name}
+                    </span>
+
+                    <strong style="color:#ef4444;">
+                        ${stock.score}分
+                    </strong>
+                </div>
+            `;
+
+        });
+
+        document.getElementById("top3").innerHTML = html;
+
+    } catch (err) {
+
+        console.error(err);
+
+        document.getElementById("top3").innerHTML =
+            "AI推荐加载失败";
+
+    }
+
+}
+loadTop3();
