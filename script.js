@@ -1,33 +1,35 @@
 // Ethan Quant V0.6 实时行情开发
+
 async function searchStock() {
-    const code = document.getElementById("stockCode").value;
+    const code = document.getElementById("stockCode").value.trim();
     const result = document.getElementById("result");
 
     try {
         result.innerHTML = "⏳ 正在获取实时行情...";
 
-      const response = await fetch(`/api/stock?code=${code}`);
-const stock = await response.json();
- if (stock.code) {
+        const response = await fetch(`/api/stock?code=${code}`);
+        const stock = await response.json();
 
-  result.innerHTML = `
-    <h3>${stock.name} (${stock.code})</h3>
+        if (stock.code) {
 
-    <p>💰 最新价：¥${stock.price}</p>
-    <p>📈 涨跌额：${stock.change}</p>
-    <p>📊 涨跌幅：${stock.changePercent}%</p>
+            result.innerHTML = `
+                <h3>${stock.name} (${stock.code})</h3>
 
-    <p>🌅 今开：${stock.open}</p>
-    <p>📈 最高：${stock.high}</p>
-    <p>📉 最低：${stock.low}</p>
+                <p>💰 最新价：¥${stock.price}</p>
+                <p>📈 涨跌额：${stock.change}</p>
+                <p>📊 涨跌幅：${stock.changePercent}%</p>
 
-    <p>⏰ 更新时间：${new Date().toLocaleString()}</p>
+                <p>🌅 今开：${stock.open}</p>
+                <p>📈 最高：${stock.high}</p>
+                <p>📉 最低：${stock.low}</p>
 
-    <button onclick="addFavorite('${stock.code}')">
-        ⭐ 加入自选
-    </button>
-`;
+                <p>⏰ 更新时间：${new Date().toLocaleString()}</p>
+
+                <button onclick="addFavorite('${stock.code}')">
+                    ⭐ 加入自选
+                </button>
             `;
+
         } else {
             result.innerHTML = "❌ 未找到该股票";
         }
@@ -43,6 +45,7 @@ function handleKey(event) {
         searchStock();
     }
 }
+
 function addFavorite(code) {
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
@@ -55,6 +58,7 @@ function addFavorite(code) {
         alert("这只股票已经在自选中了");
     }
 }
+
 function showFavorites() {
     const favoritesDiv = document.getElementById("favorites");
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -64,16 +68,15 @@ function showFavorites() {
         return;
     }
 
-    favoritesDiv.innerHTML = favorites
-.map(code => {
     const names = {
         "600519": "贵州茅台",
         "002428": "东山精密",
         "000858": "五粮液"
     };
 
-    return `<p>⭐ ${names[code] || "未知股票"}（${code}）</p>`;
-})
+    favoritesDiv.innerHTML = favorites
+        .map(code => `<p>⭐ ${names[code] || "未知股票"}（${code}）</p>`)
         .join("");
 }
+
 showFavorites();
