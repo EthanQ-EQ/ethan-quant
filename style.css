@@ -11,14 +11,25 @@ body{
 }
 
 .header{
-    background:#111827;
-    padding:20px;
-    text-align:center;
-    font-size:28px;
-    font-weight:bold;
-    border-bottom:1px solid #1f2937;
-}
 
+    background:#111827;
+
+    text-align:center;
+
+    padding:20px 20px 10px;
+
+}
+.banner{
+
+    width:100%;
+
+    max-width:520px;
+
+    display:block;
+
+    margin:0 auto;
+
+}
 .container{
     max-width:900px;
     margin:30px auto;
