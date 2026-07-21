@@ -226,11 +226,24 @@ async function loadMarket() {
         const res = await fetch("/api/market");
         const data = await res.json();
 
-        document.getElementById("marketTemp").innerHTML =
-            data.temperature + "°";
+      const temp = document.getElementById("marketTemp");
+const level = document.getElementById("marketLevel");
 
-        document.getElementById("marketLevel").innerHTML =
-            "今日市场：" + data.level;
+temp.innerHTML = data.temperature + "°";
+level.innerHTML = "今日市场：" + data.level;
+
+// A股：好=红，不好=绿
+if (data.temperature >= 60) {
+
+    temp.style.color = "#ef4444";
+    level.style.color = "#ef4444";
+
+} else {
+
+    temp.style.color = "#22c55e";
+    level.style.color = "#22c55e";
+
+}
 
         document.getElementById("score-shanghai").innerHTML =
             data.score.shanghai + " / 20";
