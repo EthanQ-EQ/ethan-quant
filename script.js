@@ -175,16 +175,24 @@ async function loadFavorites() {
 
                     </div>
 
-                    <div
-                        class="favorite-change"
-                        style="color:${color};">
+                  <div
+    class="favorite-change"
+    style="color:${color};">
 
-                        ${stock.change}
-                        (${stock.changePercent}%)
+    ${stock.change}
+    (${stock.changePercent}%)
 
-                    </div>
+</div>
 
-                </div>
+<button
+    class="ai-btn"
+    onclick="deepAnalyze('${stock.code}')">
+
+    🤖 AI深度分析
+
+</button>
+
+</div>
             `;
 
         } catch (err) {
@@ -306,3 +314,16 @@ async function loadTop3() {
 
 }
 loadTop3();
+// ==============================
+// Gemini 深度分析（V1.0）
+// ==============================
+
+async function deepAnalyze(code) {
+
+    alert(
+        "🤖 AI深度分析\n\n股票代码：" +
+        code +
+        "\n\n下一步接入 Google Gemini。"
+    );
+
+}
