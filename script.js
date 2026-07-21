@@ -380,3 +380,24 @@ document.addEventListener("click", function (e) {
     }
 
 });
+async function loadDailyAI() {
+
+    try {
+
+        const res = await fetch("/api/daily");
+
+        const data = await res.json();
+
+        document.getElementById("dailyAI").innerHTML =
+            data.text;
+
+    } catch (e) {
+
+        document.getElementById("dailyAI").innerHTML =
+            "AI观点生成失败";
+
+    }
+
+}
+
+loadDailyAI();
