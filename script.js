@@ -230,22 +230,13 @@ async function loadMarket() {
             data.temperature + "°";
 
         document.getElementById("marketLevel").innerHTML =
-            "🟢 今日市场：" + data.level;
+            "今日市场：" + data.level;
 
         document.getElementById("score-shanghai").innerHTML =
             data.score.shanghai + " / 20";
 
         document.getElementById("score-sz").innerHTML =
             data.score.sz + " / 20";
-
-        document.getElementById("score-advance").innerHTML =
-            data.score.advance + " / 20";
-
-        document.getElementById("score-fund").innerHTML =
-            data.score.fund + " / 15";
-
-        document.getElementById("score-emotion").innerHTML =
-            data.score.emotion + " / 10";
 
     } catch (err) {
 
