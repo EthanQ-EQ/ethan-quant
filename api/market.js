@@ -22,11 +22,11 @@ export default async function handler(req, res) {
 
     let advanceCount = 0;
 
-    if (advanceJson.data?.diff?.length) {
-      advanceCount = advanceJson.data.diff.filter(
-        item => (item.f3 || 0) > 0
-      ).length;
-    }
+  if (advanceJson.data?.diff) {
+  advanceCount = Object.values(advanceJson.data.diff).filter(
+    item => (item.f3 || 0) > 0
+  ).length;
+}
 
     // 根据涨跌幅评分（0~20）
     function scoreIndex(percent) {
@@ -109,10 +109,7 @@ export default async function handler(req, res) {
         }
       },
 
-      advanceCount,
-
-      // 临时调试，下一步会删除
-      advanceJson
+    advanceCount
     });
 
   } catch (err) {
