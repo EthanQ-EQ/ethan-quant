@@ -338,15 +338,17 @@ async function deepAnalyze(code) {
         btn.disabled = false;
         btn.innerHTML = oldText;
 
-        if (!data.success) {
+      if (!data.success) {
 
-            alert("AI分析失败：\n\n" + data.message);
-            return;
+    alert("AI分析失败：\n\n" + data.message);
+    return;
 
-        }
+}
 
-        alert(data.analysis);
+document.getElementById("aiModal").style.display = "flex";
 
+document.getElementById("aiContent").innerText =
+    data.analysis;
     } catch (err) {
 
         console.error(err);
@@ -356,3 +358,25 @@ async function deepAnalyze(code) {
     }
 
 }
+// ==============================
+// AI弹窗
+// ==============================
+
+function closeAI() {
+
+    document.getElementById("aiModal").style.display = "none";
+
+}
+
+// 点击遮罩关闭
+document.addEventListener("click", function (e) {
+
+    const modal = document.getElementById("aiModal");
+
+    if (e.target === modal) {
+
+        closeAI();
+
+    }
+
+});
