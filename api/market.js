@@ -20,11 +20,13 @@ export default async function handler(req, res) {
     const cyb = (await cybRes.json()).data;
     const advanceJson = await advanceRes.json();
 
-    let advanceCount = 0;
+  let advanceCount = 0;
 
-  if (advanceJson.data?.diff) {
-  advanceCount = Object.values(advanceJson.data.diff).filter(
-    item => (item.f3 || 0) > 0
+if (advanceJson.data?.diff) {
+  const stocks = Object.values(advanceJson.data.diff);
+
+  advanceCount = stocks.filter(
+    item => Number(item.f3) > 0
   ).length;
 }
 
