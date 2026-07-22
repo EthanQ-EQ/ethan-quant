@@ -332,8 +332,17 @@ async function deepAnalyze(code) {
         btn.disabled = true;
         btn.innerHTML = "🤖 AI分析中...";
 
-        const res = await fetch(`/api/gemini?code=${code}`);
-        const data = await res.json();
+        const res = await fetch("/api/ai", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        code
+    })
+});
+
+const data = await res.json();
 
         btn.disabled = false;
         btn.innerHTML = oldText;
