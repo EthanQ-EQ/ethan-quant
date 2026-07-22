@@ -409,3 +409,33 @@ hr{
     }
 
 }
+.favorites-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.refresh-btn{
+    background:none;
+    border:none;
+    color:#9CA3AF;
+    font-size:20px;
+    cursor:pointer;
+    padding:4px;
+    transition:.25s;
+}
+
+.refresh-btn:hover{
+    color:#fff;
+    transform:scale(1.08);
+}
+
+.refresh-btn.loading{
+    animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
