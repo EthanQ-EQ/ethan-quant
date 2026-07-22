@@ -128,11 +128,19 @@ export default async function handler(req, res) {
         console.error("Gemini错误状态：", aiRes.status);
         console.error("Gemini错误内容：", JSON.stringify(aiJson));
 
-        return res.status(aiRes.status).json({
-          success: false,
-          message: aiJson.error?.message || "Gemini接口调用失败",
-          error: aiJson
-        });
+       // 配额限制
+if (aiRes.status === 429) {
+  return res.status(429).json({
+    success: false,
+    message: "🤖 AI服务当前较繁忙，请约40秒后再试。"
+  });
+}
+
+// 其它错误
+return res.status(aiRes.status).json({
+  success: false,
+  message: "AI分析暂时不可用，请稍后重试。"
+});
 
       } catch (err) {
 
