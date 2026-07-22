@@ -109,13 +109,24 @@
         <!-- 我的自选 -->
         <div class="card">
 
-            <div class="title">
-                ⭐ 我的自选
-            </div>
+           <div class="favorites-header">
 
-            <div id="favorites">
-                暂无自选股票
-            </div>
+    <div class="title">
+        🌟 我的自选
+    </div>
+
+    <button
+        id="refreshFavorites"
+        class="refresh-btn"
+        onclick="refreshFavorites()">
+        ⟳
+    </button>
+
+</div>
+
+<div id="favorites">
+    暂无自选股票
+</div>
 
         </div>
 
