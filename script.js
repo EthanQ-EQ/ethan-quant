@@ -221,6 +221,19 @@ async function loadFavorites() {
 
 }
 
+// ⭐⭐⭐新增这里⭐⭐⭐
+async function refreshFavorites() {
+
+    const btn = document.getElementById("refreshFavorites");
+
+    btn.classList.add("loading");
+
+    await loadFavorites();
+
+    btn.classList.remove("loading");
+
+}
+
 // 页面打开立即加载
 loadFavorites();
 // ==============================
