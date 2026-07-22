@@ -266,11 +266,35 @@ if (data.temperature >= 60) {
 
 }
 
-        document.getElementById("score-shanghai").innerHTML =
-            data.score.shanghai + " / 20";
+       const sh = document.getElementById("score-shanghai");
+const sz = document.getElementById("score-sz");
 
-        document.getElementById("score-sz").innerHTML =
-            data.score.sz + " / 20";
+// 上证指数
+sh.innerHTML =
+    `${data.market.shanghai.price}
+    <span style="font-size:14px;">
+    ${Number(data.market.shanghai.changePercent) >= 0 ? "+" : ""}
+    ${data.market.shanghai.changePercent}%
+    </span>`;
+
+// 深证成指
+sz.innerHTML =
+    `${data.market.shenzhen.price}
+    <span style="font-size:14px;">
+    ${Number(data.market.shenzhen.changePercent) >= 0 ? "+" : ""}
+    ${data.market.shenzhen.changePercent}%
+    </span>`;
+
+// 红涨绿跌
+sh.style.color =
+    Number(data.market.shanghai.changePercent) >= 0
+        ? "#ef4444"
+        : "#22c55e";
+
+sz.style.color =
+    Number(data.market.shenzhen.changePercent) >= 0
+        ? "#ef4444"
+        : "#22c55e";
 
     } catch (err) {
 
