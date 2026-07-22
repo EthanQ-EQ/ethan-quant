@@ -338,11 +338,22 @@ async function deepAnalyze(code) {
         btn.disabled = false;
         btn.innerHTML = oldText;
 
-      if (!data.success) {
+     if (!data.success) {
 
-    alert("AI分析失败：\n\n" + data.message);
+    let msg = data.message || "AI分析暂时不可用，请稍后重试。";
+
+    // Gemini 配额限制
+    if (
+        msg.includes("quota") ||
+        msg.includes("Quota") ||
+        msg.includes("RESOURCE_EXHAUSTED") ||
+        msg.includes("generate_content_free_tier_requests")
+    ) {
+        msg = "🤖 AI服务当前较繁忙，请约40秒后再试。";
+    }
+
+    alert(msg);
     return;
-
 }
 
 document.getElementById("aiModal").style.display = "flex";
