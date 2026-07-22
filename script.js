@@ -450,14 +450,18 @@ document.addEventListener("click", function (e) {
 });
 async function loadDailyAI() {
 
+    const btn = document.getElementById("dailyBtn");
+
+    btn.disabled = true;
+    btn.innerHTML = "AI生成中...";
+
     try {
 
         const res = await fetch("/api/daily");
-
         const data = await res.json();
 
         document.getElementById("dailyAI").innerHTML =
-            data.text;
+            data.text || "暂无今日观点";
 
     } catch (e) {
 
@@ -466,9 +470,10 @@ async function loadDailyAI() {
 
     }
 
-}
+    btn.disabled = false;
+    btn.innerHTML = "🔄 重新生成";
 
-loadDailyAI();
+}
 function showMsg(text) {
 
     document.getElementById("msgContent").innerText = text;
