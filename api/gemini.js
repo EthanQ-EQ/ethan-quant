@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     const stockRes = await fetch(
       `${protocol}://${host}/api/stock?code=${code}`,
       {
-        signal: AbortSignal.timeout(10000)
+        signal: AbortSignal.timeout(20000)
       }
     );
 
@@ -73,17 +73,19 @@ export default async function handler(req, res) {
     let aiJson;
 
     // 最多重试2次
-    for (let i = 0; i < 2; i++) {
+   for (let i = 0; i < 2; i++) {
 
-      const controller = new AbortController();
+  const controller = new AbortController();
 
-      const timeout = setTimeout(() => {
-        controller.abort();
-      }, 15000);
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 30000);
 
-      try {
+  try {
 
-        aiRes = await fetch(
+    const start = Date.now();
+
+    aiRes = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
           {
             method: "POST",
@@ -106,11 +108,13 @@ export default async function handler(req, res) {
           }
         );
 
-        clearTimeout(timeout);
+       clearTimeout(timeout);
 
-        console.log("Gemini HTTP状态：", aiRes.status);
+console.log("Gemini耗时：", Date.now() - start, "ms");
 
-        aiJson = await aiRes.json();
+console.log("Gemini HTTP状态：", aiRes.status);
+
+aiJson = await aiRes.json();
 
         console.log("Gemini返回：", JSON.stringify(aiJson));
 
