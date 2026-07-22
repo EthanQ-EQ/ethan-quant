@@ -47,11 +47,16 @@ res.status(200).json({
   volume: d.f47,
   amount: d.f48
 });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "获取东方财富数据失败",
-      error: err.message
-    });
-  }
+ catch (err) {
+
+  console.error("东方财富错误：", err);
+
+  res.status(500).json({
+    success: false,
+    message: "获取东方财富数据失败",
+    error: err.message,
+    stack: err.stack
+  });
+
+}
 }
