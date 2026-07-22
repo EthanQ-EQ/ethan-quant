@@ -4,9 +4,16 @@
     box-sizing:border-box;
 }
 
-body{
-    background:
-radial-gradient(circle at top,#1f3b6f 0%,#111827 45%,#090d18 100%);
+background:
+    radial-gradient(circle at top,#4f8dfd 0%,transparent 35%),
+    linear-gradient(
+        180deg,
+        #23395d 0%,
+        #16213e 45%,
+        #111827 100%
+    );
+
+background-attachment:fixed;
     color:white;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 }
