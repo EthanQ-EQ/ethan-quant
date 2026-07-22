@@ -73,15 +73,27 @@ export default async function handler(req, res) {
       }
     );
 
-    const aiJson = await aiRes.json();
+   const aiJson = await aiRes.json();
 
-    const text =
-      aiJson.candidates?.[0]?.content?.parts?.[0]?.text || "";
+console.log(JSON.stringify(aiJson, null, 2));
 
-    res.status(200).json({
-      success: true,
-      text
-    });
+if (!aiRes.ok) {
+  return res.status(500).json({
+    success: false,
+    error: aiJson
+  });
+}
+
+const text =
+  aiJson.candidates?.[0]?.content?.parts?.[0]?.text ||
+  aiJson.candidates?.[0]?.output?.[0]?.content?.[0]?.text ||
+  "AI未返回内容";
+
+res.status(200).json({
+  success: true,
+  text
+});
+return;
 
   } catch (err) {
 
