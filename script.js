@@ -188,7 +188,7 @@ async function loadFavorites() {
     class="ai-btn"
     onclick="deepAnalyze('${stock.code}')">
 
-    🤖 AI深度分析
+    AI深度分析
 
 </button>
 
@@ -471,7 +471,7 @@ async function loadDailyAI() {
     }
 
     btn.disabled = false;
-    btn.innerHTML = "🔄 重新生成";
+    btn.innerHTML = "重新生成";
 
 }
 function showMsg(text) {
