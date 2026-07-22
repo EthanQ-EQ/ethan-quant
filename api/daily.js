@@ -75,13 +75,25 @@ export default async function handler(req, res) {
 
    const aiJson = await aiRes.json();
 
-console.log(JSON.stringify(aiJson, null, 2));
-
 if (!aiRes.ok) {
-  return res.status(500).json({
-    success: false,
-    error: aiJson
+
+  let text = "AI服务暂时不可用，请稍后再试。";
+
+  const msg = aiJson?.error?.message || "";
+
+  if (
+    msg.includes("RESOURCE_EXHAUSTED") ||
+    msg.includes("quota") ||
+    msg.includes("Quota")
+  ) {
+    text = "AI请求过于频繁，请等待约一分钟后重新生成今日观点。";
+  }
+
+  return res.status(200).json({
+    success: true,
+    text
   });
+
 }
 
 const text =
