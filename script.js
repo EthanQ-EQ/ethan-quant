@@ -240,68 +240,94 @@ loadFavorites();
 // V0.8 市场温度
 // ==============================
 
-async function loadMarket() {
+async function loadMarket(retry = true) {
 
     try {
 
-        const res = await fetch("/api/market");
+        const res = await fetch("/api/market?t=" + Date.now());
+
+        if (!res.ok) {
+            throw new Error("Network Error");
+        }
+
         const data = await res.json();
 
-      const temp = document.getElementById("marketTemp");
-const level = document.getElementById("marketLevel");
+        if (!data.success) {
+            throw new Error("API Error");
+        }
 
-temp.innerHTML = data.temperature + "°";
-level.innerHTML = "今日市场：" + data.level;
+        const temp = document.getElementById("marketTemp");
+        const level = document.getElementById("marketLevel");
 
-// A股：好=红，不好=绿
-if (data.temperature >= 60) {
+        temp.textContent = data.temperature + "°";
+        level.textContent = "今日市场：" + data.level;
 
-    temp.style.color = "#ef4444";
-    level.style.color = "#ef4444";
+        // A股：上涨红，下跌绿
+        const marketUp =
+            Number(data.market.shanghai.changePercent) >= 0;
 
-} else {
+        temp.style.color = marketUp ? "#ef4444" : "#22c55e";
+        level.style.color = marketUp ? "#ef4444" : "#22c55e";
 
-    temp.style.color = "#22c55e";
-    level.style.color = "#22c55e";
+        // 上证
+        const sh = document.getElementById("score-shanghai");
 
-}
+        sh.innerHTML =
+            `${data.market.shanghai.price}
+            <span style="font-size:13px;">
+            ${Number(data.market.shanghai.changePercent) >= 0 ? "+" : ""}
+            ${data.market.shanghai.changePercent}%
+            </span>`;
 
-       const sh = document.getElementById("score-shanghai");
-const sz = document.getElementById("score-sz");
+        sh.style.color =
+            Number(data.market.shanghai.changePercent) >= 0
+                ? "#ef4444"
+                : "#22c55e";
 
-// 上证指数
-sh.innerHTML =
-    `${data.market.shanghai.price}
-    <span style="font-size:14px;">
-    ${Number(data.market.shanghai.changePercent) >= 0 ? "+" : ""}
-    ${data.market.shanghai.changePercent}%
-    </span>`;
+        // 深证
+        const sz = document.getElementById("score-sz");
 
-// 深证成指
-sz.innerHTML =
-    `${data.market.shenzhen.price}
-    <span style="font-size:14px;">
-    ${Number(data.market.shenzhen.changePercent) >= 0 ? "+" : ""}
-    ${data.market.shenzhen.changePercent}%
-    </span>`;
+        sz.innerHTML =
+            `${data.market.shenzhen.price}
+            <span style="font-size:13px;">
+            ${Number(data.market.shenzhen.changePercent) >= 0 ? "+" : ""}
+            ${data.market.shenzhen.changePercent}%
+            </span>`;
 
-// 红涨绿跌
-sh.style.color =
-    Number(data.market.shanghai.changePercent) >= 0
-        ? "#ef4444"
-        : "#22c55e";
-
-sz.style.color =
-    Number(data.market.shenzhen.changePercent) >= 0
-        ? "#ef4444"
-        : "#22c55e";
+        sz.style.color =
+            Number(data.market.shenzhen.changePercent) >= 0
+                ? "#ef4444"
+                : "#22c55e";
 
     } catch (err) {
 
         console.error(err);
 
-        document.getElementById("marketLevel").innerHTML =
+        // 自动重试一次
+        if (retry) {
+
+            setTimeout(() => {
+
+                loadMarket(false);
+
+            }, 800);
+
+            return;
+
+        }
+
+        document.getElementById("marketLevel").textContent =
             "获取市场数据失败";
+
+    }
+
+}
+
+// 页面打开立即加载
+loadMarket();
+
+// 每30秒刷新一次
+setInterval(loadMarket, 30000);
 
     }
 
