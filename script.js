@@ -30,30 +30,30 @@ async function searchStock() {
         result.innerHTML = `
             <h3>${stock.name} (${stock.code})</h3>
 
-            <p>💰 最新价：
+            <p>最新价：
                 <span style="color:${color};font-weight:bold;">
                     ¥${stock.price}
                 </span>
             </p>
 
             <p style="color:${color};">
-                📈 涨跌额：${stock.change}
+                涨跌额：${stock.change}
             </p>
 
             <p style="color:${color};">
-                📊 涨跌幅：${stock.changePercent}%
+                涨跌幅：${stock.changePercent}%
             </p>
 
-            <p>🌅 今开：${stock.open}</p>
-            <p>📈 最高：${stock.high}</p>
-            <p>📉 最低：${stock.low}</p>
+            <p>今开：${stock.open}</p>
+            <p>最高：${stock.high}</p>
+            <p>最低：${stock.low}</p>
 
             <p style="margin-top:10px;color:#888;">
                 更新时间：${new Date().toLocaleString()}
             </p>
 
             <button onclick="addFavorite('${stock.code}')">
-                ⭐ 加入自选
+                加入自选
             </button>
         `;
 
