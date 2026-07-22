@@ -29,7 +29,15 @@ export default async function handler(req, res) {
     const response = await fetch(url);
     const json = await response.json();
 
-  const d = json.data;
+ const d = json.data;
+
+if (!d) {
+  return res.status(404).json({
+    success: false,
+    message: "东方财富未返回股票数据",
+    raw: json
+  });
+}
 
 res.status(200).json({
   code: d.f57,
