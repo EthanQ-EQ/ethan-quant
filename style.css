@@ -451,14 +451,32 @@ hr{
     transition:all .25s ease;
 
 }
+.refresh-icon{
 
+    width:18px;
+    height:18px;
+
+}
 .refresh-btn:hover{
+
+    background:rgba(255,255,255,.08);
+
     color:#fff;
-    transform:scale(1.08);
+
 }
 
-.refresh-btn.loading{
+.refresh-btn.loading svg{
+
     animation:spin .8s linear infinite;
+
+}
+
+.refresh-btn:disabled{
+
+    opacity:.6;
+
+    cursor:default;
+
 }
 
 @keyframes spin{
