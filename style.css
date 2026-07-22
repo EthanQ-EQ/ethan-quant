@@ -457,6 +457,7 @@ hr{
     height:18px;
 
 }
+
 .refresh-btn:hover{
 
     background:rgba(255,255,255,.08);
@@ -465,7 +466,7 @@ hr{
 
 }
 
-.refresh-btn.loading svg{
+.refresh-btn.loading .refresh-icon{
 
     animation:spin .8s linear infinite;
 
@@ -474,7 +475,6 @@ hr{
 .refresh-btn:disabled{
 
     opacity:.6;
-
     cursor:default;
 
 }
