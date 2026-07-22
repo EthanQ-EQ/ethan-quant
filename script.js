@@ -352,7 +352,7 @@ async function deepAnalyze(code) {
         msg = "🤖 AI服务当前较繁忙，请约40秒后再试。";
     }
 
-    alert(msg);
+    showMsg(msg);
     return;
 }
 
@@ -364,7 +364,7 @@ document.getElementById("aiContent").innerText =
 
         console.error(err);
 
-        alert("AI分析失败，请稍后重试。");
+        showMsg("AI分析失败，请稍后重试。");
 
     }
 
@@ -412,3 +412,15 @@ async function loadDailyAI() {
 }
 
 loadDailyAI();
+function showMsg(text) {
+
+    document.getElementById("msgContent").innerText = text;
+    document.getElementById("msgModal").style.display = "flex";
+
+}
+
+function closeMsg() {
+
+    document.getElementById("msgModal").style.display = "none";
+
+}
