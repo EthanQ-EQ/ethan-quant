@@ -71,18 +71,24 @@
 </div>
 
         <!-- AI观点 -->
-        <div class="card">
+       <div class="card">
 
-            <div class="title">
-                AI 今日观点
-            </div>
+    <div class="title">
+        AI 今日观点
+    </div>
 
-         <p id="dailyAI">
+    <div id="dailyAI" style="margin:18px 0;color:#aaa;">
+        点击下方按钮生成今日AI观点
+    </div>
 
-正在生成今日观点...
+    <button
+        id="dailyBtn"
+        class="ai-btn"
+        onclick="loadDailyAI()">
+        获取
+    </button>
 
-</p>
-        </div>
+</div>
 
         <!-- 股票搜索 -->
         <div class="card">
