@@ -9,12 +9,10 @@ export default async function handler(req, res) {
   }
 
   try {
-
-    // 获取当前网站地址
     const protocol = req.headers["x-forwarded-proto"] || "https";
     const host = req.headers.host;
 
-    // 获取实时股票数据
+    // 获取股票数据
     const stockRes = await fetch(
       `${protocol}://${host}/api/stock?code=${code}`
     );
@@ -25,7 +23,6 @@ export default async function handler(req, res) {
 
     const stock = await stockRes.json();
 
-    // 组织 Prompt
     const prompt = `
 你是一位专业A股分析师。
 
@@ -62,53 +59,96 @@ export default async function handler(req, res) {
 要求：
 
 1. 不要输出 Markdown。
-2. 不要输出任何横线（如：━━━━━━━━━━━━、----------）。
-3. 不要输出"本分析仅供参考"等免责声明。
-4. 不要输出任何结尾说明。
-5. 每个模块之间空一行。
-6. 内容简洁专业。
+2. 不要输出横线。
+3. 不要免责声明。
+4. 不要结尾说明。
+5. 每个模块空一行。
+6. 内容专业简洁。
 `;
 
-    // 调用 Gemini
-    const aiRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
+    let aiRes;
+    let aiJson;
+
+    // 最多尝试2次
+    for (let i = 0; i < 2; i++) {
+
+      const controller = new AbortController();
+
+      const timeout = setTimeout(() => {
+        controller.abort();
+      }, 15000);
+
+      try {
+
+        aiRes = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": process.env.GEMINI_API_KEY
+            },
+            body: JSON.stringify({
+              contents: [
                 {
-                  text: prompt
+                  parts: [
+                    {
+                      text: prompt
+                    }
+                  ]
                 }
               ]
-            }
-          ]
-        })
+            }),
+            signal: controller.signal
+          }
+        );
+
+        clearTimeout(timeout);
+
+        aiJson = await aiRes.json();
+
+        if (aiRes.ok) break;
+
+        // 429等待1秒重试
+        if (aiRes.status === 429 && i === 0) {
+          console.log("Gemini 429，自动重试...");
+          await new Promise(r => setTimeout(r, 1000));
+          continue;
+        }
+
+        console.error("Gemini错误：", aiJson);
+
+        return res.status(aiRes.status).json({
+          success: false,
+          message: aiJson.error?.message || "Gemini调用失败",
+          error: aiJson
+        });
+
+      } catch (err) {
+
+        clearTimeout(timeout);
+
+        if (err.name === "AbortError") {
+          return res.status(408).json({
+            success: false,
+            message: "Gemini请求超时，请稍后再试。"
+          });
+        }
+
+        throw err;
       }
-    );
-
-    const aiJson = await aiRes.json();
-
-    if (!aiRes.ok) {
-      return res.status(aiRes.status).json({
-        success: false,
-        message: "Gemini接口调用失败",
-        error: aiJson
-      });
     }
 
     const analysis =
-      aiJson.candidates?.[0]?.content?.parts?.[0]?.text;
+      aiJson?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!analysis) {
+
+      console.error("Gemini返回：", aiJson);
+
       return res.status(500).json({
         success: false,
-        message: "Gemini没有返回分析结果",
+        message: "Gemini没有返回分析内容。",
         raw: aiJson
       });
     }
@@ -124,7 +164,7 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: err.message
+      message: err.message || "服务器错误"
     });
 
   }
