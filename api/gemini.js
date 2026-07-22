@@ -12,9 +12,12 @@ export default async function handler(req, res) {
     const protocol = req.headers["x-forwarded-proto"] || "https";
     const host = req.headers.host;
 
-    // 获取股票数据
+    // 获取股票数据（10秒超时）
     const stockRes = await fetch(
-      `${protocol}://${host}/api/stock?code=${code}`
+      `${protocol}://${host}/api/stock?code=${code}`,
+      {
+        signal: AbortSignal.timeout(10000)
+      }
     );
 
     if (!stockRes.ok) {
@@ -69,7 +72,7 @@ export default async function handler(req, res) {
     let aiRes;
     let aiJson;
 
-    // 最多尝试2次
+    // 最多重试2次
     for (let i = 0; i < 2; i++) {
 
       const controller = new AbortController();
@@ -105,22 +108,29 @@ export default async function handler(req, res) {
 
         clearTimeout(timeout);
 
+        console.log("Gemini HTTP状态：", aiRes.status);
+
         aiJson = await aiRes.json();
 
-        if (aiRes.ok) break;
+        console.log("Gemini返回：", JSON.stringify(aiJson));
 
-        // 429等待1秒重试
+        if (aiRes.ok) {
+          break;
+        }
+
+        // 429 自动重试一次
         if (aiRes.status === 429 && i === 0) {
-          console.log("Gemini 429，自动重试...");
-          await new Promise(r => setTimeout(r, 1000));
+          console.log("429，1秒后自动重试...");
+          await new Promise(resolve => setTimeout(resolve, 1000));
           continue;
         }
 
-        console.error("Gemini错误：", aiJson);
+        console.error("Gemini错误状态：", aiRes.status);
+        console.error("Gemini错误内容：", JSON.stringify(aiJson));
 
         return res.status(aiRes.status).json({
           success: false,
-          message: aiJson.error?.message || "Gemini调用失败",
+          message: aiJson.error?.message || "Gemini接口调用失败",
           error: aiJson
         });
 
@@ -128,11 +138,19 @@ export default async function handler(req, res) {
 
         clearTimeout(timeout);
 
+        console.error("Gemini异常：", err);
+
         if (err.name === "AbortError") {
           return res.status(408).json({
             success: false,
-            message: "Gemini请求超时，请稍后再试。"
+            message: "Gemini请求超时，请稍后重试。"
           });
+        }
+
+        if (i === 0) {
+          console.log("请求异常，自动重试...");
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          continue;
         }
 
         throw err;
@@ -144,7 +162,7 @@ export default async function handler(req, res) {
 
     if (!analysis) {
 
-      console.error("Gemini返回：", aiJson);
+      console.error("Gemini返回空内容：", JSON.stringify(aiJson));
 
       return res.status(500).json({
         success: false,
@@ -160,7 +178,7 @@ export default async function handler(req, res) {
 
   } catch (err) {
 
-    console.error(err);
+    console.error("服务器错误：", err);
 
     return res.status(500).json({
       success: false,
