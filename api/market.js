@@ -59,22 +59,27 @@ export default async function handler(req, res) {
         sz: szScore
       },
 
-      market: {
-        shanghai: {
-          name: sh.f58,
-          changePercent: sh.f170 / 100
-        },
+     market: {
 
-        shenzhen: {
-          name: sz.f58,
-          changePercent: sz.f170 / 100
-        },
+    shanghai: {
+        name: sh.f58,
+        price: (sh.f43 / 100).toFixed(2),
+        changePercent: (sh.f170 / 100).toFixed(2)
+    },
 
-        chinext: {
-          name: cyb.f58,
-          changePercent: cyb.f170 / 100
-        }
-      }
+    shenzhen: {
+        name: sz.f58,
+        price: (sz.f43 / 100).toFixed(2),
+        changePercent: (sz.f170 / 100).toFixed(2)
+    },
+
+    chinext: {
+        name: cyb.f58,
+        price: (cyb.f43 / 100).toFixed(2),
+        changePercent: (cyb.f170 / 100).toFixed(2)
+    }
+
+}
     });
 
   } catch (err) {
