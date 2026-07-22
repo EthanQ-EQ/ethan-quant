@@ -47,7 +47,7 @@ res.status(200).json({
   volume: d.f47,
   amount: d.f48
 });
- catch (err) {
+} catch (err) {
 
   console.error("东方财富错误：", err);
 
