@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     secid = `0.${code}`; // 深圳
   }
 
-  const url = `https://push2.eastmoney.com/api/qt/stock/get?secid=${secid}&fields=f57,f58,f43,f44,f45,f46,f47,f48,f49,f50,f51,f52,f60,f169,f170`;
+  const url = `https://push2.eastmoney.com/api/qt/stock/get?secid=${secid}&fields=f57,f58,f43,f44,f45,f46,f47,f48,f49,f50,f51,f52,f60,f71,f168,f170,f169,f50,f171,f162,f49,f55,f62,f135,f136`;
 
   try {
     const response = await fetch(url);
@@ -40,20 +40,29 @@ if (!d) {
 }
 
 res.status(200).json({
-  code: d.f57,
-  name: d.f58,
+ code: d.f57,
+name: d.f58,
 
-  price: d.f43 / 100,
-  open: d.f46 / 100,
-  high: d.f44 / 100,
-  low: d.f45 / 100,
-  yesterday: d.f60 / 100,
+price: d.f43 / 100,
+open: d.f46 / 100,
+high: d.f44 / 100,
+low: d.f45 / 100,
+yesterday: d.f60 / 100,
 
-  change: d.f169 / 100,
-  changePercent: d.f170 / 100,
+change: d.f169 / 100,
+changePercent: d.f170 / 100,
 
-  volume: d.f47,
-  amount: d.f48
+volume: d.f47,
+amount: d.f48,
+
+averagePrice: d.f71 / 100,
+turnoverRate: d.f168 / 100,
+volumeRatio: d.f50,
+amplitude: d.f171 / 100,
+pe: d.f162 / 100,
+outsideVolume: d.f49,
+insideVolume: d.f55,
+mainFund: d.f62
 });
 } catch (err) {
 
