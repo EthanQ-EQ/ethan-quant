@@ -256,15 +256,59 @@ document.getElementById("stockInfo").innerHTML=`
 
 <div class="info-item">
 <div class="info-title">成交量</div>
-<div class="info-value">
-${(stock.volume/10000).toFixed(2)} 万手
-</div>
+<div class="info-value">${(stock.volume/10000).toFixed(2)} 万手</div>
 </div>
 
 <div class="info-item">
 <div class="info-title">成交额</div>
+<div class="info-value">${(stock.amount/100000000).toFixed(2)} 亿元</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">均价</div>
+<div class="info-value">${stock.averagePrice ?? "--"}</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">振幅</div>
+<div class="info-value">${stock.amplitude ?? "--"}%</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">换手率</div>
+<div class="info-value">${stock.turnoverRate ?? "--"}%</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">量比</div>
+<div class="info-value">${stock.volumeRatio ?? "--"}</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">外盘</div>
 <div class="info-value">
-${(stock.amount/100000000).toFixed(2)} 亿元
+${stock.outsideVolume ? (stock.outsideVolume/10000).toFixed(2)+" 万" : "--"}
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">内盘</div>
+<div class="info-value">
+${stock.insideVolume ? (stock.insideVolume/10000).toFixed(2)+" 万" : "--"}
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">主力流入</div>
+<div class="info-value">
+${stock.mainFund ?? "--"}
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-title">市盈率</div>
+<div class="info-value">
+${stock.pe ?? "--"}
 </div>
 </div>
 
