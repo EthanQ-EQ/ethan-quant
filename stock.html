@@ -346,35 +346,90 @@ async function loadKline(type,btn){
 
         },
 
-        series:[{
+       function calcMA(day){
 
-            type:"candlestick",
+    const result=[];
 
-            data:data.map(i=>[
+    for(let i=0;i<data.length;i++){
 
-                i.open,
+        if(i<day-1){
+            result.push("-");
+            continue;
+        }
 
-                i.close,
+        let sum=0;
 
-                i.low,
+        for(let j=0;j<day;j++){
+            sum+=data[i-j].close;
+        }
 
-                i.high
+        result.push((sum/day).toFixed(2));
 
-            ]),
+    }
 
-            itemStyle:{
+    return result;
 
-                color:"#ef4444",
+}
 
-                color0:"#22c55e",
+series:[
 
-                borderColor:"#ef4444",
+{
 
-                borderColor0:"#22c55e"
+    type:"candlestick",
 
-            }
+    data:data.map(i=>[
+        i.open,
+        i.close,
+        i.low,
+        i.high
+    ]),
 
-        }]
+    itemStyle:{
+        color:"#ef4444",
+        color0:"#22c55e",
+        borderColor:"#ef4444",
+        borderColor0:"#22c55e"
+    }
+
+},
+
+{
+
+    name:"MA5",
+
+    type:"line",
+
+    data:calcMA(5),
+
+    symbol:"none"
+
+},
+
+{
+
+    name:"MA10",
+
+    type:"line",
+
+    data:calcMA(10),
+
+    symbol:"none"
+
+},
+
+{
+
+    name:"MA20",
+
+    type:"line",
+
+    data:calcMA(20),
+
+    symbol:"none"
+
+}
+
+]
 
     });
 
