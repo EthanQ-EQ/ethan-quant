@@ -25,36 +25,34 @@ export default async function handler(req, res) {
 
   let klt = "101";
 
-  switch (type) {
-    case "week":
-      klt = "102";
-      break;
-    case "month":
-      klt = "103";
-      break;
-    default:
-      klt = "101";
-  }
+  if (type === "week") klt = "102";
+  if (type === "month") klt = "103";
 
   const url =
-`https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${secid}&klt=${klt}&fqt=1&lmt=300&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61`;
+`https://push2his.eastmoney.com/api/qt/stock/kline/get?fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61&beg=19000101&end=20500101&rtntype=6&secid=${secid}&klt=${klt}&fqt=1&ut=fa5fd1943c7b386f172d6893dbfba10b`;
 
   try {
 
-    const response = await fetch(url);
+    const response = await fetch(url,{
+      headers:{
+        "User-Agent":"Mozilla/5.0",
+        "Referer":"https://quote.eastmoney.com/",
+        "Accept":"application/json,text/plain,*/*"
+      }
+    });
 
     const json = await response.json();
 
     if (!json.data || !json.data.klines) {
 
-      return res.status(404).json({
+      return res.status(200).json({
         success:false,
-        message:"没有K线数据"
+        debug:json
       });
 
     }
 
-    const list = json.data.klines.map(item=>{
+    const data = json.data.klines.map(item=>{
 
       const i=item.split(",");
 
@@ -72,7 +70,15 @@ export default async function handler(req, res) {
 
         volume:Number(i[5]),
 
-        amount:Number(i[6])
+        amount:Number(i[6]),
+
+        amplitude:Number(i[7]),
+
+        changePercent:Number(i[8]),
+
+        change:Number(i[9]),
+
+        turnover:Number(i[10])
 
       };
 
@@ -82,17 +88,21 @@ export default async function handler(req, res) {
 
       success:true,
 
-      data:list
+      name:json.data.name,
+
+      code:json.data.code,
+
+      data
 
     });
 
-  } catch(err){
+  } catch(e){
 
     res.status(500).json({
 
       success:false,
 
-      message:err.message
+      message:e.message
 
     });
 
