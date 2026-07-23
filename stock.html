@@ -292,16 +292,16 @@ ${stock.outsideVolume ? (stock.outsideVolume/10000).toFixed(2)+" 万" : "--"}
 </div>
 
 <div class="info-item">
-<div class="info-title">内盘</div>
+<div class="info-title">跌停价</div>
 <div class="info-value">
-${stock.insideVolume ? (stock.insideVolume/10000).toFixed(2)+" 万" : "--"}
+${stock.limitDown ?? "--"}
 </div>
 </div>
 
 <div class="info-item">
-<div class="info-title">涨跌</div>
-<div class="info-value" style="color:${color}">
-${Number(stock.change)>=0?"+":""}${stock.change}
+<div class="info-title">涨停价</div>
+<div class="info-value">
+${stock.limitUp ?? "--"}
 </div>
 </div>
 
