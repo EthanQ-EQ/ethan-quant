@@ -226,6 +226,8 @@ async function refreshFavorites() {
 
     const btn = document.getElementById("refreshFavorites");
 
+    if (!btn) return;
+
     btn.classList.add("loading");
 
     await loadFavorites();
@@ -234,8 +236,10 @@ async function refreshFavorites() {
 
 }
 
-// 页面打开立即加载
-loadFavorites();
+// 页面有自选模块才加载
+if (document.getElementById("favorites")) {
+    loadFavorites();
+}
 // ==============================
 // V0.8 市场温度
 // ==============================
