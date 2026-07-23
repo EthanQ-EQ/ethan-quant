@@ -1,22 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股票详情</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>股票详情</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>股票详情</h1>
+    <h1 id="stockName">加载中...</h1>
 
-    <p>正在加载...</p>
+    <div id="stockInfo"></div>
 
 </div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+async function loadStock(){
+
+    const res = await fetch("/api/stock?code=" + code);
+
+    const stock = await res.json();
+
+    const color =
+        Number(stock.change) >= 0
+        ? "#ef4444"
+        : "#22c55e";
+
+    document.getElementById("stockName").innerHTML =
+        `${stock.name} (${stock.code})`;
+
+    document.getElementById("stockInfo").innerHTML = `
+
+<h2 style="color:${color};font-size:52px;">
+¥${stock.price}
+</h2>
+
+<p style="color:${color};font-size:26px;">
+${stock.change}
+(${stock.changePercent}%)
+</p>
+
+<hr>
+
+<p>今开：${stock.open}</p>
+
+<p>最高：${stock.high}</p>
+
+<p>最低：${stock.low}</p>
+
+<p>昨收：${stock.yesterday}</p>
+
+<p>成交量：${stock.volume}</p>
+
+<p>成交额：${stock.amount}</p>
+
+`;
+
+}
+
+loadStock();
+
+</script>
 
 </body>
 </html>
