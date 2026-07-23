@@ -80,22 +80,65 @@
 
 }
 
-#kline{
+.k-tabs{
 
-    height:320px;
+display:flex;
 
-    display:flex;
+gap:10px;
 
-    align-items:center;
-
-    justify-content:center;
-
-    color:#8b93a7;
-
-    font-size:18px;
+margin-bottom:18px;
 
 }
 
+.k-btn{
+
+flex:1;
+
+height:42px;
+
+border:none;
+
+border-radius:12px;
+
+background:#131b31;
+
+color:#8b93a7;
+
+font-size:15px;
+
+font-weight:600;
+
+}
+
+.k-btn.active{
+
+background:#3b4d85;
+
+color:#fff;
+
+}
+
+#kline{
+
+height:420px;
+
+border-radius:16px;
+
+background:#131b31;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:#8b93a7;
+
+font-size:18px;
+
+text-align:center;
+
+}
 </style>
 
 </head>
@@ -146,16 +189,33 @@ id="stockInfo">
 
 <div class="stock-card">
 
-<h2 style="margin-top:0;">K线</h2>
+<div class="k-tabs">
+
+<button class="k-btn active">分时</button>
+
+<button class="k-btn">日K</button>
+
+<button class="k-btn">周K</button>
+
+<button class="k-btn">月K</button>
+
+</div>
 
 <div id="kline">
 
-即将接入东方财富K线
+<div class="loading">
+
+K线功能开发中...
+
+<br><br>
+
+下一步接入东方财富实时K线
 
 </div>
 
 </div>
 
+</div>
 </div>
 
 <script>
