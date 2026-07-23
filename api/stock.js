@@ -57,7 +57,7 @@ amount: d.f48,
 
 averagePrice: d.f71 / 100,
 turnoverRate: d.f168 / 100,
-volumeRatio: d.f50,
+volumeRatio: (d.f50 / 100).toFixed(2),
 amplitude: d.f171 / 100,
 pe: d.f162 / 100,
 outsideVolume: d.f49,
