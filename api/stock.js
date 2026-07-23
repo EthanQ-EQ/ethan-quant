@@ -61,11 +61,12 @@ volumeRatio: d.f50,
 amplitude: d.f171 / 100,
 pe: d.f162 / 100,
 outsideVolume: d.f49,
-insideVolume: d.f55,
-mainFund:
-Math.abs(d.f62)>=100000000
-? (d.f62/100000000).toFixed(2)+"亿"
-: (d.f62/10000).toFixed(0)+"万",
+
+limitUp: d.f51 / 100,
+
+limitDown: d.f52 / 100,
+
+pe: d.f162 / 100,
 });
 } catch (err) {
 
