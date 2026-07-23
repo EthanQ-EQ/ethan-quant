@@ -9,6 +9,95 @@
 
 <link rel="stylesheet" href="style.css">
 
+<style>
+
+.stock-header{
+    margin-bottom:25px;
+}
+
+.stock-code{
+    color:#8b93a7;
+    font-size:18px;
+    margin-top:6px;
+}
+
+.stock-price{
+    font-size:52px;
+    font-weight:700;
+    margin:20px 0 8px;
+}
+
+.stock-change{
+    font-size:22px;
+    font-weight:600;
+}
+
+.stock-card{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:22px;
+    margin-top:20px;
+}
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:16px;
+
+}
+
+.info-item{
+
+    background:#131b31;
+
+    border-radius:14px;
+
+    padding:16px;
+
+}
+
+.info-title{
+
+    color:#8b93a7;
+
+    font-size:14px;
+
+    margin-bottom:8px;
+
+}
+
+.info-value{
+
+    color:#fff;
+
+    font-size:22px;
+
+    font-weight:600;
+
+}
+
+#kline{
+
+    height:320px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#8b93a7;
+
+    font-size:18px;
+
+}
+
+</style>
+
 </head>
 
 <body>
@@ -16,8 +105,8 @@
 <div class="container">
 
 <button
-onclick="history.back()"
 class="ai-btn"
+onclick="history.back()"
 style="margin-bottom:20px;">
 
 ← 返回
@@ -28,21 +117,36 @@ style="margin-bottom:20px;">
 
 <h1 id="stockName">加载中...</h1>
 
-<div id="stockPrice"></div>
-
+<div
+id="stockCode"
+class="stock-code">
 </div>
 
 <div
-class="stock-card">
-
-<div id="stockInfo"></div>
-
+id="stockPrice"
+class="stock-price">
 </div>
 
 <div
-class="stock-card">
+id="stockChange"
+class="stock-change">
+</div>
 
-<h2>📈 K线</h2>
+</div>
+
+<div class="stock-card">
+
+<div
+class="info-grid"
+id="stockInfo">
+
+</div>
+
+</div>
+
+<div class="stock-card">
+
+<h2 style="margin-top:0;">📈 K线</h2>
 
 <div id="kline">
 
@@ -56,96 +160,73 @@ class="stock-card">
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
+const params=new URLSearchParams(location.search);
+
+const code=params.get("code");
 
 async function loadStock(){
 
-    const res = await fetch("/api/stock?code=" + code);
+const res=await fetch("/api/stock?code="+code);
 
-    const stock = await res.json();
+const stock=await res.json();
 
-    const color =
-        Number(stock.change) >= 0
-        ? "#ef4444"
-        : "#22c55e";
+const color=
+Number(stock.change)>=0
+?"#ef4444"
+:"#22c55e";
 
-   document.getElementById("stockName").innerHTML =
-`
-${stock.name}
-<br>
-<span style="font-size:22px;color:#999;">
-${stock.code}
-</span>
-`;
+document.getElementById("stockName").innerText=
+stock.name;
 
-document.getElementById("stockPrice").innerHTML =
-`
-<h1 style="color:${color};font-size:60px;margin:0;">
+document.getElementById("stockCode").innerText=
+stock.code;
+
+document.getElementById("stockPrice").innerHTML=
+`<span style="color:${color};">
 ¥${stock.price}
-</h1>
+</span>`;
 
-<div style="color:${color};font-size:26px;">
-
+document.getElementById("stockChange").innerHTML=
+`<span style="color:${color};">
 ${stock.change}
+（${stock.changePercent}%）
+</span>`;
 
-(${stock.changePercent}%)
+document.getElementById("stockInfo").innerHTML=`
 
+<div class="info-item">
+<div class="info-title">今开</div>
+<div class="info-value">${stock.open}</div>
 </div>
-`;
 
-document.getElementById("stockInfo").innerHTML = `
+<div class="info-item">
+<div class="info-title">昨收</div>
+<div class="info-value">${stock.yesterday}</div>
+</div>
 
-<h2 style="color:${color};font-size:52px;">
-¥${stock.price}
-</h2>
+<div class="info-item">
+<div class="info-title">最高</div>
+<div class="info-value">${stock.high}</div>
+</div>
 
-<p style="color:${color};font-size:26px;">
-${stock.change}
-(${stock.changePercent}%)
-</p>
+<div class="info-item">
+<div class="info-title">最低</div>
+<div class="info-value">${stock.low}</div>
+</div>
 
-<hr>
+<div class="info-item">
+<div class="info-title">成交量</div>
+<div class="info-value">
+${(stock.volume/10000).toFixed(2)} 万手
+</div>
+</div>
 
-<table style="width:100%;font-size:22px;line-height:2.4;">
-
-<tr>
-
-<td>今开</td>
-
-<td>${stock.open}</td>
-
-<td>昨收</td>
-
-<td>${stock.yesterday}</td>
-
-</tr>
-
-<tr>
-
-<td>最高</td>
-
-<td>${stock.high}</td>
-
-<td>最低</td>
-
-<td>${stock.low}</td>
-
-</tr>
-
-<tr>
-
-<td>成交量</td>
-
-<td>${stock.volume}</td>
-
-<td>成交额</td>
-
-<td>${stock.amount}</td>
-
-</tr>
-
-</table>
+<div class="info-item">
+<div class="info-title">成交额</div>
+<div class="info-value">
+${(stock.amount/100000000).toFixed(2)} 亿元
+</div>
+</div>
 
 `;
 
@@ -156,4 +237,5 @@ loadStock();
 </script>
 
 </body>
+
 </html>
