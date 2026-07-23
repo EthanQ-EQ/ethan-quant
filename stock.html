@@ -285,9 +285,9 @@ document.getElementById("stockInfo").innerHTML=`
 </div>
 
 <div class="info-item">
-<div class="info-title">外盘</div>
+<div class="info-title">涨停价</div>
 <div class="info-value">
-${stock.outsideVolume ? (stock.outsideVolume/10000).toFixed(2)+" 万" : "--"}
+${stock.limitUp ?? "--"}
 </div>
 </div>
 
@@ -299,9 +299,9 @@ ${stock.limitDown ?? "--"}
 </div>
 
 <div class="info-item">
-<div class="info-title">涨停价</div>
+<div class="info-title">外盘</div>
 <div class="info-value">
-${stock.limitUp ?? "--"}
+${stock.outsideVolume ? (stock.outsideVolume/10000).toFixed(2)+" 万" : "--"}
 </div>
 </div>
 
