@@ -308,9 +308,34 @@ async function loadKline(type,btn){
 
     }
 
-    const data=json.data;
+  const data=json.data;
 
-    chart.setOption({
+function calcMA(day){
+
+    const result=[];
+
+    for(let i=0;i<data.length;i++){
+
+        if(i<day-1){
+            result.push("-");
+            continue;
+        }
+
+        let sum=0;
+
+        for(let j=0;j<day;j++){
+            sum+=data[i-j].close;
+        }
+
+        result.push((sum/day).toFixed(2));
+
+    }
+
+    return result;
+
+}
+
+chart.setOption({
 
         backgroundColor:"#131b31",
 
@@ -345,31 +370,6 @@ async function loadKline(type,btn){
             axisLabel:{color:"#888"}
 
         },
-
-       function calcMA(day){
-
-    const result=[];
-
-    for(let i=0;i<data.length;i++){
-
-        if(i<day-1){
-            result.push("-");
-            continue;
-        }
-
-        let sum=0;
-
-        for(let j=0;j<day;j++){
-            sum+=data[i-j].close;
-        }
-
-        result.push((sum/day).toFixed(2));
-
-    }
-
-    return result;
-
-}
 
 series:[
 
