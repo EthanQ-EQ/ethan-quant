@@ -15,9 +15,42 @@
 
 <div class="container">
 
-    <h1 id="stockName">加载中...</h1>
+<button
+onclick="history.back()"
+class="ai-btn"
+style="margin-bottom:20px;">
 
-    <div id="stockInfo"></div>
+← 返回
+
+</button>
+
+<div class="stock-header">
+
+<h1 id="stockName">加载中...</h1>
+
+<div id="stockPrice"></div>
+
+</div>
+
+<div
+class="stock-card">
+
+<div id="stockInfo"></div>
+
+</div>
+
+<div
+class="stock-card">
+
+<h2>📈 K线</h2>
+
+<div id="kline">
+
+即将接入东方财富K线
+
+</div>
+
+</div>
 
 </div>
 
@@ -37,10 +70,31 @@ async function loadStock(){
         ? "#ef4444"
         : "#22c55e";
 
-    document.getElementById("stockName").innerHTML =
-        `${stock.name} (${stock.code})`;
+   document.getElementById("stockName").innerHTML =
+`
+${stock.name}
+<br>
+<span style="font-size:22px;color:#999;">
+${stock.code}
+</span>
+`;
 
-    document.getElementById("stockInfo").innerHTML = `
+document.getElementById("stockPrice").innerHTML =
+`
+<h1 style="color:${color};font-size:60px;margin:0;">
+¥${stock.price}
+</h1>
+
+<div style="color:${color};font-size:26px;">
+
+${stock.change}
+
+(${stock.changePercent}%)
+
+</div>
+`;
+
+document.getElementById("stockInfo").innerHTML = `
 
 <h2 style="color:${color};font-size:52px;">
 ¥${stock.price}
@@ -53,17 +107,45 @@ ${stock.change}
 
 <hr>
 
-<p>今开：${stock.open}</p>
+<table style="width:100%;font-size:22px;line-height:2.4;">
 
-<p>最高：${stock.high}</p>
+<tr>
 
-<p>最低：${stock.low}</p>
+<td>今开</td>
 
-<p>昨收：${stock.yesterday}</p>
+<td>${stock.open}</td>
 
-<p>成交量：${stock.volume}</p>
+<td>昨收</td>
 
-<p>成交额：${stock.amount}</p>
+<td>${stock.yesterday}</td>
+
+</tr>
+
+<tr>
+
+<td>最高</td>
+
+<td>${stock.high}</td>
+
+<td>最低</td>
+
+<td>${stock.low}</td>
+
+</tr>
+
+<tr>
+
+<td>成交量</td>
+
+<td>${stock.volume}</td>
+
+<td>成交额</td>
+
+<td>${stock.amount}</td>
+
+</tr>
+
+</table>
 
 `;
 
