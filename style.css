@@ -509,3 +509,57 @@ hr{
     from{transform:rotate(0deg);}
     to{transform:rotate(360deg);}
 }
+/* ===== 底部导航 ===== */
+
+body{
+    padding-bottom:90px;
+}
+
+.tabbar{
+    position:fixed;
+    left:20px;
+    right:20px;
+    bottom:20px;
+
+    height:68px;
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+    z-index:9999;
+}
+
+.tab-item{
+    flex:1;
+    text-decoration:none;
+    color:#94A3B8;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:4px;
+}
+
+.tab-item span{
+    font-size:22px;
+}
+
+.tab-item small{
+    font-size:12px;
+}
+
+.tab-item.active{
+    color:#ffffff;
+}
