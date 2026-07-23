@@ -122,24 +122,17 @@ color:#fff;
 
 height:420px;
 
+width:100%;
+
 border-radius:16px;
 
 background:#131b31;
 
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-color:#8b93a7;
-
-font-size:18px;
-
-text-align:center;
+overflow:hidden;
 
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
 </head>
 
@@ -191,29 +184,16 @@ id="stockInfo">
 
 <div class="k-tabs">
 
-<button class="k-btn active">分时</button>
+<button class="k-btn" onclick="loadKline('minute',this)">分时</button>
 
-<button class="k-btn">日K</button>
+<button class="k-btn active" onclick="loadKline('day',this)">日K</button>
 
-<button class="k-btn">周K</button>
+<button class="k-btn" onclick="loadKline('week',this)">周K</button>
 
-<button class="k-btn">月K</button>
-
+<button class="k-btn" onclick="loadKline('month',this)">月K</button>
 </div>
 
-<div id="kline">
-
-<div class="loading">
-
-K线功能开发中...
-
-<br><br>
-
-下一步接入东方财富实时K线
-
-</div>
-
-</div>
+<div id="kline"></div>
 
 </div>
 </div>
@@ -292,7 +272,117 @@ ${(stock.amount/100000000).toFixed(2)} 亿元
 
 }
 
+const chart = echarts.init(document.getElementById("kline"));
+
+async function loadKline(type,btn){
+
+    if(btn){
+
+        document.querySelectorAll(".k-btn").forEach(i=>i.classList.remove("active"));
+
+        btn.classList.add("active");
+
+    }
+
+    const map={
+
+        minute:"day",
+
+        day:"day",
+
+        week:"week",
+
+        month:"month"
+
+    };
+
+    const res=await fetch(`/api/kline?code=${code}&type=${map[type]}`);
+
+    const json=await res.json();
+
+    if(!json.success){
+
+        document.getElementById("kline").innerHTML="K线加载失败";
+
+        return;
+
+    }
+
+    const data=json.data;
+
+    chart.setOption({
+
+        backgroundColor:"#131b31",
+
+        animation:false,
+
+        grid:{
+
+            left:45,
+
+            right:20,
+
+            top:20,
+
+            bottom:35
+
+        },
+
+        xAxis:{
+
+            type:"category",
+
+            data:data.map(i=>i.date),
+
+            axisLabel:{color:"#888"}
+
+        },
+
+        yAxis:{
+
+            scale:true,
+
+            axisLabel:{color:"#888"}
+
+        },
+
+        series:[{
+
+            type:"candlestick",
+
+            data:data.map(i=>[
+
+                i.open,
+
+                i.close,
+
+                i.low,
+
+                i.high
+
+            ]),
+
+            itemStyle:{
+
+                color:"#ef4444",
+
+                color0:"#22c55e",
+
+                borderColor:"#ef4444",
+
+                borderColor0:"#22c55e"
+
+            }
+
+        }]
+
+    });
+
+}
+
 loadStock();
+
+loadKline("day");
 
 </script>
 
