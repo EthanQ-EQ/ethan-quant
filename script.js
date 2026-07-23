@@ -192,6 +192,13 @@ async function loadFavorites() {
 
 </button>
 
+<button
+    class="ai-btn"
+    onclick="location.href='stock.html?code=${stock.code}'">
+
+    股票详情
+
+</button>
 </div>
             `;
 
