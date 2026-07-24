@@ -497,3 +497,19 @@ function closeMsg() {
     document.getElementById("msgModal").style.display = "none";
 
 }
+function openBroker(type) {
+
+    const urls = {
+        eastmoney: "https://www.eastmoney.com/",
+        ths: "https://www.10jqka.com.cn/",
+        htsc: "https://www.htsc.com.cn/",
+        qq: "https://stockapp.finance.qq.com/"
+    };
+
+    if (urls[type]) {
+        window.open(urls[type], "_blank");
+    } else {
+        alert("该券商暂未支持");
+    }
+
+}
