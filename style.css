@@ -614,16 +614,19 @@ body{
 }
 
 .broker-btn{
+
     width:100%;
-    background:#F8FAFC;
-    border:1px solid #E2E8F0;
+
+    background:#fff;
+
+    color:#111827;
+
     border-radius:16px;
-    padding:16px;
+
     font-size:16px;
+
     font-weight:600;
-    text-align:left;
-    cursor:pointer;
-    transition:.2s;
+
 }
 
 .broker-btn:hover{
