@@ -616,20 +616,38 @@ body{
 .broker-btn{
 
     width:100%;
+    height:72px;
 
-    background:#fff;
+    display:flex;
+    align-items:center;
 
-    color:#111827;
+    padding:0 22px;
 
-    border-radius:16px;
+    border-radius:22px;
 
-    font-size:16px;
+    border:1px solid rgba(255,255,255,.10);
 
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    color:#fff;
+
+    font-size:20px;
     font-weight:600;
 
+    transition:.25s;
+
+    cursor:pointer;
 }
 
 .broker-btn:hover{
-    background:#EEF2FF;
-    border-color:#3B82F6;
+
+    background:rgba(255,255,255,.16);
+
+    transform:translateY(-2px);
+
+    border-color:rgba(255,255,255,.18);
+
 }
