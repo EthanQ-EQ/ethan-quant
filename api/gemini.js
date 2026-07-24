@@ -29,8 +29,20 @@ export default async function handler(req, res) {
 const prompt = `
 你是一名拥有20年以上经验的A股顶级基金经理和量化分析师。
 
-请对股票【${name}（${code}）】进行专业分析。
+股票名称：${stock.name}
+股票代码：${code}
 
+当前价格：${stock.price}
+涨跌幅：${stock.changePercent}%
+今开：${stock.open}
+最高：${stock.high}
+最低：${stock.low}
+成交量：${stock.volume}
+成交额：${stock.amount}
+换手率：${stock.turnoverRate}%
+量比：${stock.volumeRatio}
+
+请根据以上实时数据进行专业分析。
 请严格按照下面格式回答，不要省略任何项目，不要输出Markdown表格。
 
 ━━━━━━━━━━━━━━━━
