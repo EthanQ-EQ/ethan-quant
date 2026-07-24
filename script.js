@@ -499,17 +499,37 @@ function closeMsg() {
 }
 function openBroker(type) {
 
-    const urls = {
-        eastmoney: "https://www.eastmoney.com/",
-        ths: "https://www.10jqka.com.cn/",
-        htsc: "https://www.htsc.com.cn/",
-        qq: "https://stockapp.finance.qq.com/"
+    const brokers = {
+        eastmoney: {
+            app: "eastmoney://",
+            web: "https://www.eastmoney.com/"
+        },
+        ths: {
+            app: "hexin://",
+            web: "https://www.10jqka.com.cn/"
+        },
+        htsc: {
+            app: "zhangle://",
+            web: "https://www.htsc.com.cn/"
+        },
+        qq: {
+            app: "qqstock://",
+            web: "https://stockapp.finance.qq.com/"
+        }
     };
 
-    if (urls[type]) {
-        window.open(urls[type], "_blank");
-    } else {
-        alert("该券商暂未支持");
-    }
+    const broker = brokers[type];
+
+    if (!broker) return;
+
+    // 尝试打开 App
+    window.location.href = broker.app;
+
+    // 1.5 秒后如果没有跳转成功，则打开官网
+    setTimeout(() => {
+        window.open(broker.web, "_blank");
+    }, 1500);
+
+}
 
 }
