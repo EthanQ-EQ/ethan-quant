@@ -597,3 +597,36 @@ body{
     color:#fff;
 
 }
+.third-party-card{
+    margin-bottom:20px;
+}
+
+.third-party-desc{
+    color:#94A3B8;
+    font-size:14px;
+    margin:8px 0 18px;
+}
+
+.broker-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.broker-btn{
+    width:100%;
+    background:#F8FAFC;
+    border:1px solid #E2E8F0;
+    border-radius:16px;
+    padding:16px;
+    font-size:16px;
+    font-weight:600;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.broker-btn:hover{
+    background:#EEF2FF;
+    border-color:#3B82F6;
+}
